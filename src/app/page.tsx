@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gray-100 flex flex-col items-center p-10 font-sans">
       <header className="w-full max-w-4xl bg-blue-600 text-white rounded-t-lg p-6 text-center shadow-md">
-        <h1 className="text-3xl font-bold">Print Kiosk System</h1>
+        <h1 className="text-3xl font-bold">Print Kiosk System Ultra</h1>
         <p className="text-sm mt-2">Fast, Secure, and Easy Printing</p>
       </header>
 
