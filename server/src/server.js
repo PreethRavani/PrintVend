@@ -12,6 +12,15 @@ async function startServer() {
     // Connect to database
     await connectDB();
 
+    // Auto-seed if database is empty
+    const Kiosk = require('./models/Kiosk');
+    const kioskCount = await Kiosk.countDocuments();
+    if (kioskCount === 0) {
+      logger.info('Database is unseeded. Running automatic database seed...');
+      const seed = require('./scripts/seed');
+      await seed(false);
+    }
+
     // Start background simulator and cleanup jobs
     printerSimulator.start(2500); // Progress tick every 2.5s for snappy demonstration
     cleanupCron.start();

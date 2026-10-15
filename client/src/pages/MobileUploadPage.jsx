@@ -121,6 +121,46 @@ export default function MobileUploadPage() {
         {!activeSession ? (
           <div className="bg-white rounded-3xl p-6 shadow-md border border-slate-200 space-y-4">
             <h2 className="text-sm font-bold text-slate-800">Connect to Kiosk Terminal</h2>
+            
+            {/* Quick 1-click direct session creation for testing */}
+            <div className="p-3.5 bg-brand-50 rounded-2xl border border-brand-200/80 space-y-2">
+              <span className="text-xs font-bold text-brand-900 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-brand-600" />
+                <span>Quick Test / Direct Mobile Session</span>
+              </span>
+              <p className="text-[11px] text-brand-700">
+                Don't have a session code? Tap below to start an instant upload session for the main campus kiosk:
+              </p>
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    setLoadingSession(true);
+                    setErrorMessage(null);
+                    const { createSession } = await import('../services/sessionService');
+                    const res = await createSession('KIOSK-LIB-01');
+                    setActiveSession(res);
+                    sessionStorage.setItem('scp_session_id', res.sessionId);
+                    sessionStorage.setItem('scp_session_token', res.token);
+                  } catch (e) {
+                    setErrorMessage(e.message || 'Could not start mobile session');
+                  } finally {
+                    setLoadingSession(false);
+                  }
+                }}
+                disabled={loadingSession}
+                className="touch-btn w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-sm transition"
+              >
+                {loadingSession ? 'Initializing Session...' : '⚡ Start Direct Mobile Upload Session'}
+              </button>
+            </div>
+
+            <div className="relative flex py-1 items-center">
+              <div className="flex-grow border-t border-slate-200"></div>
+              <span className="flex-shrink mx-3 text-[11px] text-slate-400 font-medium">OR ENTER SESSION ID</span>
+              <div className="flex-grow border-t border-slate-200"></div>
+            </div>
+
             <div className="space-y-2">
               <label className="text-xs text-slate-500">Enter Session ID (displayed on kiosk)</label>
               <input
@@ -135,9 +175,9 @@ export default function MobileUploadPage() {
             <button
               onClick={() => loadSession(sessionIdInput)}
               disabled={!sessionIdInput.trim() || loadingSession}
-              className="touch-btn w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl shadow-md transition"
+              className="touch-btn w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-md transition text-xs"
             >
-              {loadingSession ? 'Connecting...' : 'Connect to Kiosk'}
+              {loadingSession ? 'Connecting...' : 'Connect with Code'}
             </button>
 
             {errorMessage && (

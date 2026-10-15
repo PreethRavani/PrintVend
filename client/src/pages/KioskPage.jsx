@@ -26,7 +26,7 @@ export default function KioskPage() {
   const handleShowQrModalFromWelcome = async () => {
     try {
       if (!session) {
-        await startNewSession();
+        await startNewSession(null, false);
       }
       setShowQrModal(true);
     } catch (err) {

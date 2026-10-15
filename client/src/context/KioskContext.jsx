@@ -9,13 +9,29 @@ export function KioskProvider({ children }) {
   // Navigation & Step Flow
   const [currentStep, setCurrentStep] = useState(1);
 
+  const DEFAULT_KIOSK = {
+    kioskId: 'KIOSK-LIB-01',
+    name: 'Central Library - Ground Floor Lobby',
+    location: 'Library Building, Ground Floor West',
+    status: 'ONLINE',
+    supportedPaperSizes: ['A4', 'A3'],
+    supportedPrintModes: ['BW', 'COLOR'],
+    supportedDuplex: true,
+    paperLevel: 94,
+    tonerBlack: 88,
+    tonerColor: 76,
+    queueLength: 0,
+    queueLimit: 25,
+    estimatedWaitMinutes: 0
+  };
+
   // Kiosk hardware data
-  const [kiosks, setKiosks] = useState([]);
+  const [kiosks, setKiosks] = useState([DEFAULT_KIOSK]);
   const [selectedKioskId, setSelectedKioskId] = useState(
     import.meta.env.VITE_KIOSK_ID || 'KIOSK-LIB-01'
   );
-  const [currentKiosk, setCurrentKiosk] = useState(null);
-  const [kiosksLoading, setKiosksLoading] = useState(true);
+  const [currentKiosk, setCurrentKiosk] = useState(DEFAULT_KIOSK);
+  const [kiosksLoading, setKiosksLoading] = useState(false);
 
   // Active User Session
   const [session, setSession] = useState(null);
@@ -51,13 +67,15 @@ export function KioskProvider({ children }) {
     try {
       setKiosksLoading(true);
       const data = await getKiosks();
-      setKiosks(data);
-      const found = data.find((k) => k.kioskId === selectedKioskId) || data[0];
-      if (found) {
-        setCurrentKiosk(found);
+      if (Array.isArray(data) && data.length > 0) {
+        setKiosks(data);
+        const found = data.find((k) => k.kioskId === selectedKioskId) || data[0];
+        if (found) {
+          setCurrentKiosk(found);
+        }
       }
     } catch (err) {
-      console.error('Failed to load kiosks:', err);
+      console.warn('Failed to load kiosks from API, using default kiosk:', err.message);
     } finally {
       setKiosksLoading(false);
     }
@@ -68,7 +86,7 @@ export function KioskProvider({ children }) {
   }, [refreshKiosks]);
 
   // Start new printing session
-  const startNewSession = async (studentId = null) => {
+  const startNewSession = async (studentId = null, autoNavigate = true) => {
     try {
       setSessionLoading(true);
       const sessionData = await createSession(selectedKioskId, studentId);
@@ -79,7 +97,9 @@ export function KioskProvider({ children }) {
       setActiveJob(null);
       setJobStatus(null);
       setCleanupReport(null);
-      setCurrentStep(3); // Direct to upload screen
+      if (autoNavigate) {
+        setCurrentStep(3); // Direct to upload screen
+      }
       return sessionData;
     } catch (err) {
       console.error('Failed to create session:', err);

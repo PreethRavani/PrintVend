@@ -18,12 +18,13 @@ import {
 import { useKiosk } from '../../context/KioskContext';
 
 export default function WelcomeScreen({ onStartSession, onShowQrModal }) {
-  const { currentKiosk, kiosks, setSelectedKioskId, selectedKioskId, kiosksLoading } = useKiosk();
+  const { currentKiosk, kiosks, setSelectedKioskId, selectedKioskId, kiosksLoading, sessionLoading } = useKiosk();
   const [studentIdInput, setStudentIdInput] = useState('');
   const [showStudentIdField, setShowStudentIdField] = useState(false);
   const [showHelpModal, setShowHelpModal] = useState(false);
 
-  const isOnline = currentKiosk?.status === 'ONLINE';
+  // Enabled by default unless explicitly in OFFLINE or MAINTENANCE
+  const isOnline = currentKiosk ? currentKiosk.status !== 'OFFLINE' && currentKiosk.status !== 'MAINTENANCE' : true;
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 py-4">
@@ -82,21 +83,21 @@ export default function WelcomeScreen({ onStartSession, onShowQrModal }) {
           <div className="pt-4 flex flex-col sm:flex-row gap-4">
             <button
               onClick={() => onStartSession(studentIdInput)}
-              disabled={!isOnline}
+              disabled={!isOnline || sessionLoading}
               className={`touch-btn px-8 py-4 rounded-2xl text-lg font-bold shadow-xl transition-all flex items-center justify-center space-x-3 ${
-                isOnline
+                isOnline && !sessionLoading
                   ? 'bg-gradient-to-r from-brand-500 to-cyan-500 hover:from-brand-600 hover:to-cyan-600 text-white shadow-brand-500/25 active:scale-95'
                   : 'bg-slate-700 text-slate-400 cursor-not-allowed'
               }`}
             >
               <FileUp className="w-6 h-6" />
-              <span>Start Printing</span>
+              <span>{sessionLoading ? 'Starting Session...' : 'Start Printing'}</span>
               <ChevronRight className="w-5 h-5 ml-1" />
             </button>
 
             <button
               onClick={onShowQrModal}
-              disabled={!isOnline}
+              disabled={!isOnline || sessionLoading}
               className="touch-btn px-6 py-4 rounded-2xl text-base font-semibold bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-600/80 shadow-md flex items-center justify-center space-x-3 transition active:scale-95"
             >
               <QrCode className="w-5 h-5 text-cyan-400" />

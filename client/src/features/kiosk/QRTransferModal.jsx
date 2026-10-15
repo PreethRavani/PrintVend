@@ -3,7 +3,7 @@ import { QrCode, X, Smartphone, ArrowRight, ExternalLink, Check, Copy } from 'lu
 import { useKiosk } from '../../context/KioskContext';
 
 export default function QRTransferModal({ isOpen, onClose }) {
-  const { session, currentKiosk } = useKiosk();
+  const { session, currentKiosk, setCurrentStep } = useKiosk();
   const [copied, setCopied] = useState(false);
 
   if (!isOpen || !session) return null;
@@ -82,7 +82,21 @@ export default function QRTransferModal({ isOpen, onClose }) {
             </div>
           </div>
 
-          <div className="pt-2 text-xs text-slate-400">
+          {/* Proceed button */}
+          <div className="pt-3 border-t border-slate-100">
+            <button
+              onClick={() => {
+                onClose();
+                setCurrentStep(3);
+              }}
+              className="touch-btn w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl flex items-center justify-center space-x-2 shadow-md transition active:scale-95 text-sm"
+            >
+              <span>Done Uploading / View Uploaded Files</span>
+              <ArrowRight className="w-4 h-4 ml-1" />
+            </button>
+          </div>
+
+          <div className="text-[11px] text-slate-400">
             This QR code expires in 30 minutes for security.
           </div>
         </div>
