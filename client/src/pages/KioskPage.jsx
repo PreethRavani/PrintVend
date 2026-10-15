@@ -42,7 +42,6 @@ export default function KioskPage() {
         {currentStep === 1 && (
           <WelcomeScreen
             onStartSession={handleStartSession}
-            onShowQrModal={handleShowQrModalFromWelcome}
           />
         )}
 

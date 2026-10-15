@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import QRCode from 'qrcode';
 import {
   CreditCard,
   QrCode,
@@ -10,21 +11,63 @@ import {
   ArrowRight,
   ArrowLeft,
   Sparkles,
-  HelpCircle
+  Copy,
+  Check,
+  RefreshCw,
+  Zap
 } from 'lucide-react';
 import { useKiosk } from '../../context/KioskContext';
+
+const KIOSK_VPA_ID = 'smartcampus.kiosk@upi';
 
 export default function PaymentStep({ onNext, onBack }) {
   const { activeJob, quote, handlePayment } = useKiosk();
 
-  const [paymentMode, setPaymentMode] = useState('SIMULATED_UPI');
-  const [upiIdInput, setUpiIdInput] = useState('student@okhdfcbank');
+  const [upiQrDataUrl, setUpiQrDataUrl] = useState('');
+  const [copiedVpa, setCopiedVpa] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState(null);
   const [forceFailTest, setForceFailTest] = useState(false);
 
-  const amount = quote?.totalAmount || activeJob?.quote?.totalAmount || 0;
+  const amount = quote?.totalAmount || activeJob?.quote?.totalAmount || 2.0;
   const currencySymbol = quote?.currencySymbol || '₹';
+  const jobRef = activeJob?.jobNumber || 'JOB-PRINT';
+
+  // Automatically generate dynamic UPI QR code on mount or when amount/job changes
+  useEffect(() => {
+    let isMounted = true;
+    async function generateUPIQR() {
+      try {
+        const upiUri = `upi://pay?pa=${encodeURIComponent(KIOSK_VPA_ID)}&pn=SmartCampusPrint&am=${amount.toFixed(
+          2
+        )}&cu=INR&tn=${encodeURIComponent(jobRef)}`;
+        const dataUrl = await QRCode.toDataURL(upiUri, {
+          width: 260,
+          margin: 2,
+          color: {
+            dark: '#0f172a',
+            light: '#ffffff'
+          }
+        });
+        if (isMounted) {
+          setUpiQrDataUrl(dataUrl);
+        }
+      } catch (err) {
+        console.error('Failed to generate dynamic UPI QR:', err);
+      }
+    }
+
+    generateUPIQR();
+    return () => {
+      isMounted = false;
+    };
+  }, [amount, jobRef]);
+
+  const copyVpa = () => {
+    navigator.clipboard.writeText(KIOSK_VPA_ID);
+    setCopiedVpa(true);
+    setTimeout(() => setCopiedVpa(false), 2000);
+  };
 
   const processPaymentSubmission = async (simulateFailure = false) => {
     try {
@@ -32,8 +75,8 @@ export default function PaymentStep({ onNext, onBack }) {
       setPaymentError(null);
 
       await handlePayment({
-        paymentMode,
-        upiId: upiIdInput,
+        paymentMode: 'SIMULATED_UPI',
+        upiId: KIOSK_VPA_ID,
         forceFail: simulateFailure || forceFailTest
       });
 
@@ -48,23 +91,14 @@ export default function PaymentStep({ onNext, onBack }) {
   return (
     <div className="max-w-2xl mx-auto space-y-6 py-2">
       {/* Step Header */}
-      <div className="text-center space-y-2 pb-4 border-b border-slate-200">
-        <span className="text-xs font-bold text-brand-600 uppercase tracking-wider">Step 4 of 4</span>
-        <h2 className="text-3xl font-extrabold text-slate-900">Complete Payment</h2>
+      <div className="text-center space-y-1.5 pb-4 border-b border-slate-200">
+        <span className="text-xs font-bold text-brand-600 uppercase tracking-wider bg-brand-50 px-2.5 py-0.5 rounded-full border border-brand-200">
+          Step 4 of 4: Payment
+        </span>
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Complete Payment</h2>
         <p className="text-sm text-slate-500">
-          Simulated test checkout for prototype demonstration.
+          Scan the dynamic UPI QR code or verify the VPA ID to approve simulated payment.
         </p>
-      </div>
-
-      {/* Prototype Simulation Banner */}
-      <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-800 text-xs flex items-start space-x-3">
-        <ShieldAlert className="w-5 h-5 flex-shrink-0 text-amber-600 mt-0.5" />
-        <div className="space-y-1">
-          <div className="font-bold text-amber-900">Prototype Demonstration Mode</div>
-          <p>
-            No real currency will be charged. This sandbox simulates the exact UPI and QR payment verification process for laboratory testing.
-          </p>
-        </div>
       </div>
 
       {/* Order Summary Pill */}
@@ -72,10 +106,10 @@ export default function PaymentStep({ onNext, onBack }) {
         <div>
           <span className="text-xs text-slate-400 font-semibold uppercase">Job Reference</span>
           <div className="text-base font-mono font-bold text-slate-800">
-            {activeJob?.jobNumber || 'JOB-PENDING'}
+            {jobRef}
           </div>
           <div className="text-xs text-slate-500 mt-0.5">
-            {quote?.totalSides || activeJob?.quote?.totalSides} sides ({quote?.totalSheets || activeJob?.quote?.totalSheets} physical sheets)
+            {quote?.totalSides || activeJob?.quote?.totalSides || 1} sides ({quote?.totalSheets || activeJob?.quote?.totalSheets || 1} physical sheets)
           </div>
         </div>
 
@@ -87,131 +121,123 @@ export default function PaymentStep({ onNext, onBack }) {
         </div>
       </div>
 
-      {/* Payment Method Selector */}
-      <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-lg space-y-5">
-        <h3 className="text-base font-bold text-slate-800">Select Simulated Payment Method</h3>
+      {/* Unified Single-View Payment Card: VPA ID + Auto QR Code */}
+      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-lg space-y-5">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div className="flex items-center space-x-2.5">
+            <div className="w-9 h-9 rounded-xl bg-brand-50 text-brand-700 flex items-center justify-center border border-brand-200">
+              <QrCode className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-slate-900">Instant UPI Payment</h3>
+              <p className="text-xs text-slate-500">Scan code with any UPI app on your smartphone</p>
+            </div>
+          </div>
+          <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+            ● Dynamic QR Ready
+          </span>
+        </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        {/* VPA ID mentioned right above the QR code */}
+        <div className="p-3.5 bg-slate-50/90 rounded-2xl border border-slate-200 flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">
+              Virtual Payment Address (VPA ID)
+            </span>
+            <span className="text-sm font-mono font-black text-brand-700 truncate block">
+              {KIOSK_VPA_ID}
+            </span>
+          </div>
+
           <button
             type="button"
-            onClick={() => setPaymentMode('SIMULATED_UPI')}
-            className={`touch-btn p-4 rounded-2xl border-2 text-left flex items-center space-x-3 transition ${
-              paymentMode === 'SIMULATED_UPI'
-                ? 'border-brand-600 bg-brand-50/60 ring-2 ring-brand-500/20'
-                : 'border-slate-200 hover:border-slate-300 bg-white'
-            }`}
+            onClick={copyVpa}
+            className="touch-btn px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 flex items-center space-x-1.5 shadow-2xs transition"
           >
-            <Smartphone className="w-6 h-6 text-brand-600 flex-shrink-0" />
-            <div>
-              <div className="text-sm font-bold text-slate-900">UPI Collect (VPA)</div>
-              <div className="text-[11px] text-slate-500">Google Pay, PhonePe, Paytm</div>
-            </div>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setPaymentMode('SIMULATED_QR')}
-            className={`touch-btn p-4 rounded-2xl border-2 text-left flex items-center space-x-3 transition ${
-              paymentMode === 'SIMULATED_QR'
-                ? 'border-brand-600 bg-brand-50/60 ring-2 ring-brand-500/20'
-                : 'border-slate-200 hover:border-slate-300 bg-white'
-            }`}
-          >
-            <QrCode className="w-6 h-6 text-cyan-600 flex-shrink-0" />
-            <div>
-              <div className="text-sm font-bold text-slate-900">Scan UPI QR</div>
-              <div className="text-[11px] text-slate-500">Simulate on-screen dynamic QR</div>
-            </div>
+            {copiedVpa ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-slate-500" />}
+            <span>{copiedVpa ? 'Copied' : 'Copy VPA'}</span>
           </button>
         </div>
 
-        {/* Dynamic Payment Fields */}
-        {paymentMode === 'SIMULATED_UPI' ? (
-          <div className="space-y-3 pt-2">
-            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
-              Virtual Payment Address (UPI ID)
-            </label>
-            <input
-              type="text"
-              value={upiIdInput}
-              onChange={(e) => setUpiIdInput(e.target.value)}
-              placeholder="e.g. yourname@okhdfcbank"
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500"
-            />
-            <p className="text-[11px] text-slate-400">
-              Demo tip: Type "fail" in the UPI ID to simulate a bank decline for testing the retry flow.
-            </p>
-          </div>
-        ) : (
-          <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 text-center space-y-3">
-            <div className="w-40 h-40 bg-white p-3 rounded-xl mx-auto shadow-sm border border-slate-200 flex items-center justify-center">
-              <QrCode className="w-32 h-32 text-slate-800" />
+        {/* Dynamic UPI QR Code centered automatically */}
+        <div className="p-5 bg-gradient-to-b from-slate-50 to-slate-100/60 rounded-2xl border border-slate-200 text-center space-y-3">
+          <div className="inline-block p-3.5 bg-white rounded-2xl shadow-md border border-slate-200">
+            {upiQrDataUrl ? (
+              <img
+                src={upiQrDataUrl}
+                alt="UPI Payment QR Code"
+                className="w-48 h-48 mx-auto rounded-lg"
+              />
+            ) : (
+              <div className="w-48 h-48 flex items-center justify-center text-slate-400 text-xs">
+                <RefreshCw className="w-6 h-6 animate-spin mr-2" />
+                Generating UPI QR...
+              </div>
+            )}
+            <div className="text-[11px] font-bold text-slate-600 mt-2">
+              Scan & Pay: <strong className="text-brand-700">{currencySymbol}{amount.toFixed(2)}</strong>
             </div>
-            <div className="text-xs font-semibold text-slate-700">
-              Simulated Dynamic Bharat-UPI QR ({currencySymbol}{amount.toFixed(2)})
-            </div>
-            <p className="text-[11px] text-slate-400">
-              Tap "Confirm Simulated Payment" below to simulate approval from mobile banking app.
-            </p>
           </div>
-        )}
+
+          {/* Supported UPI Apps logos / text */}
+          <div className="text-[11px] text-slate-500 font-medium">
+            Supported Apps: <span className="text-slate-700 font-semibold">Google Pay • PhonePe • Paytm • BHIM • Cred</span>
+          </div>
+        </div>
 
         {/* Error / Retry Banner */}
         {paymentError && (
-          <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-sm space-y-2">
-            <div className="flex items-center space-x-2 font-bold">
-              <AlertTriangle className="w-4 h-4 text-rose-600" />
-              <span>Transaction Declined</span>
+          <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-sm flex items-start space-x-3">
+            <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+            <div className="flex-1 text-xs">
+              <span className="font-bold block">Payment Declined</span>
+              <span>{paymentError}</span>
             </div>
-            <p className="text-xs">{paymentError}</p>
-            <button
-              onClick={() => {
-                setUpiIdInput('student@okhdfcbank');
-                setForceFailTest(false);
-                setPaymentError(null);
-              }}
-              className="text-xs text-rose-800 underline font-semibold mt-1"
-            >
-              Reset to successful test credentials
-            </button>
           </div>
         )}
 
-        {/* Lab Testing Simulator Controls */}
-        <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-          <label className="flex items-center space-x-2 cursor-pointer">
+        {/* Test simulation failure checkbox */}
+        <div className="pt-1">
+          <label className="flex items-center space-x-2 text-xs text-slate-600 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={forceFailTest}
               onChange={(e) => setForceFailTest(e.target.checked)}
-              className="rounded border-slate-300 text-rose-600 focus:ring-rose-500"
+              className="rounded text-brand-600 focus:ring-brand-500 w-4 h-4"
             />
-            <span className="text-slate-600">Simulate Payment Failure (Demonstrate Retry)</span>
+            <span>Simulate Payment Failure (To demonstrate retry workflow)</span>
           </label>
         </div>
 
-        {/* Actions */}
-        <div className="pt-2 flex flex-col sm:flex-row gap-3">
+        {/* Action Buttons */}
+        <div className="flex items-center space-x-4 pt-3 border-t border-slate-100">
           <button
+            type="button"
             onClick={onBack}
             disabled={isProcessing}
-            className="touch-btn px-6 py-3.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-sm font-semibold flex items-center justify-center space-x-2"
+            className="touch-btn px-5 py-3.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-sm font-semibold flex items-center space-x-2 transition"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back</span>
           </button>
 
           <button
-            onClick={() => processPaymentSubmission(forceFailTest)}
+            type="button"
+            onClick={() => processPaymentSubmission(false)}
             disabled={isProcessing}
-            className="touch-btn flex-1 py-4 rounded-xl text-base font-bold bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-lg shadow-emerald-500/25 flex items-center justify-center space-x-2 transition active:scale-95"
+            className="touch-btn flex-1 py-3.5 px-6 rounded-xl text-base font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/25 flex items-center justify-center space-x-2 active:scale-95 transition disabled:bg-slate-300"
           >
-            <CheckCircle2 className="w-5 h-5" />
-            <span>
-              {isProcessing
-                ? 'Verifying Simulated Transaction...'
-                : `Pay ${currencySymbol}${amount.toFixed(2)} (Simulated)`}
-            </span>
+            {isProcessing ? (
+              <>
+                <RefreshCw className="w-5 h-5 animate-spin" />
+                <span>Verifying UPI Transaction...</span>
+              </>
+            ) : (
+              <>
+                <CheckCircle2 className="w-5 h-5" />
+                <span>Pay {currencySymbol}{amount.toFixed(2)} (Simulated)</span>
+              </>
+            )}
           </button>
         </div>
       </div>

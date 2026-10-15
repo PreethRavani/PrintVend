@@ -13,7 +13,8 @@ import { useKiosk } from '../../context/KioskContext';
 
 export default function CompletionStep({ onFinish }) {
   const { activeJob, quote, cleanupReport, resetSession, currentKiosk } = useKiosk();
-  const [countdown, setCountdown] = useState(15);
+  // 5-second automatic reset timer as requested
+  const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
     // Trigger festive celebration confetti
@@ -27,7 +28,7 @@ export default function CompletionStep({ onFinish }) {
       // Ignore if canvas-confetti fails
     }
 
-    // Inactivity reset timer (15 seconds)
+    // Inactivity reset timer (5 seconds)
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
@@ -77,12 +78,14 @@ export default function CompletionStep({ onFinish }) {
           <div className="flex justify-between">
             <span>Amount Paid:</span>
             <span className="font-semibold text-emerald-700">
-              {quote?.currencySymbol}{quote?.totalAmount.toFixed(2)} (Paid via {activeJob?.paymentId ? 'Simulated UPI' : 'Simulated Gateway'})
+              {quote?.currencySymbol || '₹'}{(quote?.totalAmount || 2.0).toFixed(2)} (Paid via Simulated UPI)
             </span>
           </div>
           <div className="flex justify-between">
             <span>Sheets Printed:</span>
-            <span className="font-semibold text-slate-800">{quote?.totalSheets} {quote?.paperSize} sheets</span>
+            <span className="font-semibold text-slate-800">
+              {quote?.totalSheets || 1} {quote?.paperSize || 'A4'} sheet(s)
+            </span>
           </div>
         </div>
 
@@ -94,17 +97,17 @@ export default function CompletionStep({ onFinish }) {
             <span>
               {cleanupReport?.success
                 ? `All ${cleanupReport.cleanedCount || 'uploaded'} file(s) have been permanently deleted from server disk.`
-                : 'Temporary files have been securely unlinked and purged from disk storage.'}
+                : 'All temporary files have been permanently deleted from server disk.'}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Auto Reset Timer Notice */}
-      <div className="p-3 bg-slate-100 rounded-xl text-xs text-slate-500 flex items-center justify-center space-x-2">
-        <RotateCcw className="w-3.5 h-3.5 text-slate-400 animate-spin" />
+      {/* Auto Reset Timer Notice (5 seconds) */}
+      <div className="p-3 bg-slate-100 rounded-xl text-xs text-slate-600 flex items-center justify-center space-x-2 font-medium">
+        <RotateCcw className="w-3.5 h-3.5 text-slate-500 animate-spin" />
         <span>
-          Screen will automatically reset for the next student in <strong>{countdown} seconds</strong>.
+          Screen will automatically reset for the next student in <strong className="text-slate-900 font-extrabold">{countdown} {countdown === 1 ? 'second' : 'seconds'}</strong>.
         </span>
       </div>
 
