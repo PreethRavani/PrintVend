@@ -13,7 +13,7 @@ import {
   Sparkles,
   Layers
 } from 'lucide-react';
-import { getSession } from '../services/sessionService';
+import { getSession, createSession } from '../services/sessionService';
 import { uploadFiles } from '../services/uploadService';
 
 export default function MobileUploadPage() {
@@ -137,7 +137,6 @@ export default function MobileUploadPage() {
                   try {
                     setLoadingSession(true);
                     setErrorMessage(null);
-                    const { createSession } = await import('../services/sessionService');
                     const res = await createSession('KIOSK-LIB-01');
                     setActiveSession(res);
                     sessionStorage.setItem('scp_session_id', res.sessionId);

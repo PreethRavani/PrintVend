@@ -46,6 +46,27 @@ const documentSchema = new mongoose.Schema(
     cleanedAt: {
       type: Date,
       default: null
+    },
+    source: {
+      type: String,
+      enum: ['MOBILE', 'KIOSK_LOCAL', 'COLLEGE_CATALOG'],
+      default: 'MOBILE'
+    },
+    branch: {
+      type: String,
+      default: null
+    },
+    year: {
+      type: String,
+      default: null
+    },
+    category: {
+      type: String,
+      default: null
+    },
+    courseCode: {
+      type: String,
+      default: null
     }
   },
   { timestamps: true }

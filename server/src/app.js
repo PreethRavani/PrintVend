@@ -14,6 +14,7 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const pricingRoutes = require('./routes/pricingRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const catalogRoutes = require('./routes/catalogRoutes');
 
 const app = express();
 
@@ -75,6 +76,7 @@ app.use('/api/uploads', uploadRoutes);
 app.use('/api/pricing', pricingRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/catalog', catalogRoutes);
 
 // 404 handler
 app.use('/api/*', (req, res) => {

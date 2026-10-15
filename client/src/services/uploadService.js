@@ -32,3 +32,26 @@ export const removeDocument = async (docId, sessionId) => {
   });
   return res;
 };
+
+export const getCatalogDocuments = async (branch = 'CS', year = 'TY', category = '') => {
+  let url = `/catalog?branch=${encodeURIComponent(branch)}&year=${encodeURIComponent(year)}`;
+  if (category) {
+    url += `&category=${encodeURIComponent(category)}`;
+  }
+  const res = await api.get(url);
+  return res.data;
+};
+
+export const addCatalogDocument = async (sessionId, catalogId) => {
+  const res = await api.post(
+    '/catalog/select',
+    { sessionId, catalogId },
+    {
+      headers: {
+        'x-session-id': sessionId
+      }
+    }
+  );
+  return res.data.document;
+};
+
