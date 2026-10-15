@@ -12,7 +12,8 @@ import {
   ChevronRight,
   ShieldCheck,
   Zap,
-  Users
+  Users,
+  X
 } from 'lucide-react';
 import { useKiosk } from '../../context/KioskContext';
 
@@ -25,20 +26,20 @@ export default function WelcomeScreen({ onStartSession }) {
 
   return (
     <div className="max-w-5xl mx-auto space-y-3 sm:space-y-4 py-1 sm:py-2 w-full">
-      {/* Hero Touch Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-navy-800 via-navy-900 to-slate-900 border border-slate-700/60 p-6 sm:p-8 text-white shadow-xl">
-        <div className="absolute -right-12 -bottom-12 w-80 h-80 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Hero Touch Banner - Apple Minimalist Aesthetic */}
+      <div className="relative overflow-hidden rounded-3xl bg-[#0f172a] border border-slate-800/80 p-6 sm:p-8 text-white shadow-xl">
+        <div className="absolute -right-12 -bottom-12 w-80 h-80 bg-[#0071e3]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute right-8 top-6 opacity-10 hidden lg:block">
-          <Printer className="w-48 h-48 text-brand-400" />
+          <Printer className="w-48 h-48 text-slate-300" />
         </div>
 
         <div className="relative z-10 max-w-xl space-y-3">
-          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-brand-500/20 text-cyan-300 border border-brand-400/30 text-[11px] font-semibold tracking-wide">
-            <Sparkles className="w-3 h-3" />
+          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-slate-800/90 text-slate-300 border border-slate-700/80 text-[11px] font-medium tracking-wide">
+            <Sparkles className="w-3 h-3 text-[#0071e3]" />
             <span>Fast, Privacy-First Self-Service Printing</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white leading-tight">
+          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white leading-tight">
             Print Your Documents in Seconds.
           </h1>
 
@@ -46,15 +47,15 @@ export default function WelcomeScreen({ onStartSession }) {
             No lines, no thumb drives, no hassle. Choose pre-uploaded college documents or transfer assignments directly from your phone.
           </p>
 
-          {/* Single Prominent Primary Action Touch Button */}
+          {/* Single Prominent Primary Action Touch Button (Apple System Blue Solid) */}
           <div className="pt-2">
             <button
               onClick={() => onStartSession()}
               disabled={!isOnline || sessionLoading}
-              className={`touch-btn px-8 py-3.5 rounded-2xl text-base font-bold shadow-lg transition-all flex items-center justify-center space-x-2.5 ${
+              className={`touch-btn px-8 py-3.5 rounded-2xl text-base font-semibold shadow-sm transition-all flex items-center justify-center space-x-2.5 ${
                 isOnline && !sessionLoading
-                  ? 'bg-gradient-to-r from-brand-500 to-cyan-500 hover:from-brand-600 hover:to-cyan-600 text-white shadow-brand-500/25 active:scale-95'
-                  : 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                  ? 'bg-[#0071e3] hover:bg-[#0077ed] text-white active:scale-[0.98]'
+                  : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/50'
               }`}
             >
               <FileUp className="w-5 h-5" />
@@ -146,8 +147,8 @@ export default function WelcomeScreen({ onStartSession }) {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-slate-600">Duplex (2-sided):</span>
-              <span className="font-bold text-emerald-600">
-                {currentKiosk?.supportedDuplex ? '✓ Supported' : 'Single only'}
+              <span className="font-semibold text-emerald-600">
+                {currentKiosk?.supportedDuplex ? 'Supported' : 'Single only'}
               </span>
             </div>
           </div>
@@ -186,43 +187,43 @@ export default function WelcomeScreen({ onStartSession }) {
 
       {/* Help Modal */}
       {showHelpModal && (
-        <div className="fixed inset-0 bg-navy-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-200">
             <div className="flex justify-between items-center pb-2 border-b border-slate-100">
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-brand-600" />
+              <h3 className="text-base font-semibold text-slate-900 flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-[#0071e3]" />
                 <span>How Smart Campus Print Works</span>
               </h3>
               <button
                 onClick={() => setShowHelpModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-sm font-bold p-1"
+                className="text-slate-400 hover:text-slate-700 p-1 rounded-lg transition"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="space-y-2.5 text-xs text-slate-600 leading-relaxed">
-              <div className="flex items-start space-x-2">
-                <span className="w-4 h-4 rounded-full bg-brand-100 text-brand-700 font-bold flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+              <div className="flex items-start space-x-2.5">
+                <span className="w-4 h-4 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px]">1</span>
                 <p><strong>Pick Documents:</strong> Choose pre-uploaded lab manuals or transfer personal files via mobile QR.</p>
               </div>
-              <div className="flex items-start space-x-2">
-                <span className="w-4 h-4 rounded-full bg-brand-100 text-brand-700 font-bold flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+              <div className="flex items-start space-x-2.5">
+                <span className="w-4 h-4 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px]">2</span>
                 <p><strong>Configure:</strong> Choose B&W or Color, Copies, Page Ranges, and Duplex printing.</p>
               </div>
-              <div className="flex items-start space-x-2">
-                <span className="w-4 h-4 rounded-full bg-brand-100 text-brand-700 font-bold flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+              <div className="flex items-start space-x-2.5">
+                <span className="w-4 h-4 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px]">3</span>
                 <p><strong>Simulated UPI Pay:</strong> Fast sandbox checkout without real money.</p>
               </div>
-              <div className="flex items-start space-x-2">
-                <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center flex-shrink-0 mt-0.5">4</span>
+              <div className="flex items-start space-x-2.5">
+                <span className="w-4 h-4 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px]">4</span>
                 <p><strong>Collect & Shred:</strong> Retrieve prints from tray. Files are erased immediately.</p>
               </div>
             </div>
 
             <button
               onClick={() => setShowHelpModal(false)}
-              className="touch-btn w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 rounded-xl text-xs transition"
+              className="touch-btn w-full bg-[#0071e3] hover:bg-[#0077ed] text-white font-semibold py-2.5 rounded-xl text-xs transition"
             >
               Got It
             </button>

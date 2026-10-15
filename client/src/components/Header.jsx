@@ -52,24 +52,24 @@ export default function Header() {
   const isKioskView = location.pathname === '/';
 
   return (
-    <header className="bg-navy-800 text-white border-b border-slate-700/60 sticky top-0 z-40 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+    <header className="bg-slate-900/90 backdrop-blur-md text-white border-b border-slate-800 sticky top-0 z-40 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
         {/* Logo & Brand */}
         <div className="flex items-center space-x-3">
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-              <Printer className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-[#0071e3] flex items-center justify-center shadow-sm group-hover:bg-[#0077ed] transition-colors">
+              <Printer className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-bold text-lg tracking-tight text-white group-hover:text-brand-300 transition-colors">
+                <span className="font-semibold text-base sm:text-lg tracking-tight text-white group-hover:text-slate-200 transition-colors">
                   Smart Campus Print
                 </span>
-                <span className="px-2 py-0.5 text-xs font-semibold uppercase tracking-wider rounded-full bg-brand-500/20 text-cyan-300 border border-brand-400/30">
-                  Kiosk System
+                <span className="px-2 py-0.5 text-[10px] font-medium tracking-wide rounded-md bg-slate-800 text-slate-300 border border-slate-700/70">
+                  Terminal
                 </span>
               </div>
-              <p className="text-xs text-slate-400">Self-Service Document Printing</p>
+              <p className="text-[11px] text-slate-400">Self-Service Document Printing</p>
             </div>
           </Link>
         </div>

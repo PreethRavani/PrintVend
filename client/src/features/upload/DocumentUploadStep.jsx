@@ -195,11 +195,11 @@ export default function DocumentUploadStep({ onNext, onBack }) {
       {/* Top Bar: Compact Header & Live Sync Status */}
       <div className="flex-shrink-0 flex items-center justify-between pb-2 border-b border-slate-200">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold text-xs">
+          <div className="w-8 h-8 rounded-lg bg-[#0071e3] text-white flex items-center justify-center font-bold text-xs">
             1/4
           </div>
           <div>
-            <h2 className="text-lg sm:text-xl font-black text-slate-900 leading-tight">
+            <h2 className="text-lg sm:text-xl font-semibold tracking-tight text-slate-900 leading-tight">
               Select Documents to Print
             </h2>
             <p className="text-[11px] text-slate-500 hidden sm:block">
@@ -210,19 +210,19 @@ export default function DocumentUploadStep({ onNext, onBack }) {
 
         {/* Live sync & Cancel button */}
         <div className="flex items-center space-x-2">
-          <div className="inline-flex items-center space-x-1 px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-[11px] font-bold border border-emerald-200">
+          <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-[11px] font-medium border border-emerald-200">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>Live Sync</span>
           </div>
 
-          <div className="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg text-[11px] font-mono font-bold border border-slate-200">
+          <div className="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg text-[11px] font-mono font-semibold border border-slate-200">
             {session?.sessionId || 'SESSION'}
           </div>
 
           <button
             type="button"
             onClick={resetSession}
-            className="touch-btn px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-bold flex items-center space-x-1 transition"
+            className="touch-btn px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-medium flex items-center space-x-1 transition"
             title="Cancel and clear this session"
           >
             <XCircle className="w-3.5 h-3.5" />
@@ -237,7 +237,7 @@ export default function DocumentUploadStep({ onNext, onBack }) {
             <AlertTriangle className="w-4 h-4 flex-shrink-0" />
             <span>{uploadError}</span>
           </span>
-          <button onClick={() => setUploadError(null)} className="font-bold text-xs underline ml-2">
+          <button onClick={() => setUploadError(null)} className="font-semibold text-xs underline ml-2">
             Dismiss
           </button>
         </div>
@@ -246,22 +246,22 @@ export default function DocumentUploadStep({ onNext, onBack }) {
       {/* 2-COLUMN SPLIT SECTION (Constrained height with zero outer scroll) */}
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch overflow-hidden">
         {/* LEFT COLUMN: Pre-Uploaded Official Documents (7 cols) */}
-        <div className="lg:col-span-7 bg-white rounded-2xl p-3.5 border border-slate-200 shadow-2xs flex flex-col justify-between overflow-hidden">
+        <div className="lg:col-span-7 bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-2xs flex flex-col justify-between overflow-hidden">
           <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 flex-shrink-0">
             <div className="flex items-center space-x-1.5">
-              <GraduationCap className="w-4 h-4 text-brand-600" />
-              <h3 className="text-xs sm:text-sm font-bold text-slate-900">
+              <GraduationCap className="w-4 h-4 text-[#0071e3]" />
+              <h3 className="text-xs sm:text-sm font-semibold text-slate-900">
                 Official College Documents
               </h3>
             </div>
-            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+            <span className="text-[10px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/80">
               Verified Repository
             </span>
           </div>
 
-          {/* Branch Pills (Single Row) */}
+          {/* Branch Pills: iOS Segmented Control */}
           <div className="flex-shrink-0 pt-1.5">
-            <div className="grid grid-cols-8 gap-1">
+            <div className="grid grid-cols-8 gap-0.5 p-0.5 bg-slate-100 rounded-xl border border-slate-200/80">
               {BRANCHES.map((b) => {
                 const isActive = selectedBranch === b.code;
                 return (
@@ -269,10 +269,10 @@ export default function DocumentUploadStep({ onNext, onBack }) {
                     key={b.code}
                     type="button"
                     onClick={() => setSelectedBranch(b.code)}
-                    className={`py-1 px-0.5 rounded-lg text-[11px] font-extrabold text-center transition ${
+                    className={`py-1 px-0.5 rounded-lg text-[11px] text-center transition font-semibold ${
                       isActive
-                        ? 'bg-brand-600 text-white shadow-2xs'
-                        : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                        ? 'bg-white text-slate-900 shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
                     }`}
                     title={b.full}
                   >
@@ -283,9 +283,9 @@ export default function DocumentUploadStep({ onNext, onBack }) {
             </div>
           </div>
 
-          {/* Year Pills (Single Row) & Category filter */}
+          {/* Year Pills: iOS Segmented Control & Category filter */}
           <div className="flex-shrink-0 pt-1 flex items-center justify-between gap-2">
-            <div className="grid grid-cols-4 gap-1 flex-1">
+            <div className="grid grid-cols-4 gap-0.5 p-0.5 bg-slate-100 rounded-xl border border-slate-200/80 flex-1">
               {YEARS.map((y) => {
                 const isActive = selectedYear === y.code;
                 return (
@@ -293,10 +293,10 @@ export default function DocumentUploadStep({ onNext, onBack }) {
                     key={y.code}
                     type="button"
                     onClick={() => setSelectedYear(y.code)}
-                    className={`py-1 rounded-lg text-[11px] font-extrabold text-center transition ${
+                    className={`py-1 rounded-lg text-[11px] text-center transition font-semibold ${
                       isActive
-                        ? 'bg-navy-900 text-white shadow-2xs'
-                        : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                        ? 'bg-white text-slate-900 shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
                     {y.label}
@@ -310,10 +310,10 @@ export default function DocumentUploadStep({ onNext, onBack }) {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-2 py-0.5 rounded text-[10px] font-semibold transition flex-shrink-0 ${
+                  className={`px-2 py-1 rounded-lg text-[10px] font-medium transition flex-shrink-0 ${
                     selectedCategory === cat
-                      ? 'bg-brand-100 text-brand-800 border border-brand-300'
-                      : 'bg-slate-50 text-slate-600 border border-slate-200'
+                      ? 'bg-slate-900 text-white'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200/60'
                   }`}
                 >
                   {cat}
@@ -374,7 +374,7 @@ export default function DocumentUploadStep({ onNext, onBack }) {
                           type="button"
                           onClick={() => handleAddCatalogDoc(item)}
                           disabled={isAdding || documents.length >= 10}
-                          className="touch-btn px-2.5 py-1 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-[11px] font-bold flex items-center space-x-1 transition active:scale-95 disabled:bg-slate-300"
+                          className="touch-btn px-2.5 py-1 bg-[#0071e3] hover:bg-[#0077ed] text-white rounded-lg text-[11px] font-semibold flex items-center space-x-1 transition active:scale-95 disabled:bg-slate-200 disabled:text-slate-400"
                         >
                           {isAdding ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
                           <span>Add</span>
@@ -389,15 +389,15 @@ export default function DocumentUploadStep({ onNext, onBack }) {
         </div>
 
         {/* RIGHT COLUMN: Mobile Phone QR Upload (5 cols) */}
-        <div className="lg:col-span-5 bg-white rounded-2xl p-3.5 border border-slate-200 shadow-2xs flex flex-col justify-between overflow-hidden">
+        <div className="lg:col-span-5 bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-2xs flex flex-col justify-between overflow-hidden">
           <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 flex-shrink-0">
             <div className="flex items-center space-x-1.5">
-              <Smartphone className="w-4 h-4 text-cyan-600" />
-              <h3 className="text-xs sm:text-sm font-bold text-slate-900">
+              <Smartphone className="w-4 h-4 text-[#0071e3]" />
+              <h3 className="text-xs sm:text-sm font-semibold text-slate-900">
                 Mobile Phone QR Upload
               </h3>
             </div>
-            <span className="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded border border-cyan-200">
+            <span className="text-[10px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/80">
               Instant Sync
             </span>
           </div>
@@ -429,7 +429,7 @@ export default function DocumentUploadStep({ onNext, onBack }) {
                 href={session?.mobileUploadUrl || '#'}
                 target="_blank"
                 rel="noreferrer"
-                className="touch-btn flex-1 bg-cyan-600 hover:bg-cyan-700 text-white text-[11px] font-bold py-1.5 px-2 rounded-xl flex items-center justify-center space-x-1 shadow-2xs transition"
+                className="touch-btn flex-1 bg-slate-900 hover:bg-black text-white text-[11px] font-semibold py-1.5 px-2 rounded-xl flex items-center justify-center space-x-1 shadow-xs transition active:scale-[0.98]"
               >
                 <span>Open Mobile Uploader</span>
                 <ExternalLink className="w-3 h-3" />
@@ -519,15 +519,25 @@ export default function DocumentUploadStep({ onNext, onBack }) {
                   <div className="flex items-center space-x-2 min-w-0">
                     <FileText className="w-4 h-4 text-brand-600 flex-shrink-0" />
                     <div className="min-w-0">
-                      <div className="flex items-center space-x-1">
-                        <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded bg-brand-100 text-brand-800">
-                          {isCatalog ? '🏛️ Official' : '📱 Mobile'}
+                      <div className="flex items-center space-x-1.5">
+                        <span className="text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 flex items-center gap-1">
+                          {isCatalog ? (
+                            <>
+                              <GraduationCap className="w-2.5 h-2.5 text-slate-500" />
+                              <span>Official</span>
+                            </>
+                          ) : (
+                            <>
+                              <Smartphone className="w-2.5 h-2.5 text-slate-500" />
+                              <span>Mobile</span>
+                            </>
+                          )}
                         </span>
-                        <span className="text-[10px] font-bold text-slate-700">
+                        <span className="text-[10px] font-semibold text-slate-600">
                           {doc.pageCount || 1}p
                         </span>
                       </div>
-                      <p className="text-xs font-bold text-slate-900 truncate">
+                      <p className="text-xs font-semibold text-slate-900 truncate">
                         {doc.originalFilename || doc.filename}
                       </p>
                     </div>
@@ -563,10 +573,10 @@ export default function DocumentUploadStep({ onNext, onBack }) {
           type="button"
           onClick={onNext}
           disabled={documents.length === 0 || uploading}
-          className={`touch-btn px-7 py-3 rounded-xl text-sm font-bold shadow-md flex items-center space-x-2 transition ${
+          className={`touch-btn px-7 py-3 rounded-xl text-sm font-semibold shadow-sm flex items-center space-x-2 transition ${
             documents.length > 0 && !uploading
-              ? 'bg-brand-600 hover:bg-brand-700 text-white shadow-brand-500/25 active:scale-95'
-              : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+              ? 'bg-[#0071e3] hover:bg-[#0077ed] text-white active:scale-[0.98]'
+              : 'bg-slate-200 text-slate-400 cursor-not-allowed'
           }`}
         >
           <span>Configure Print Settings ({documents.length} {documents.length === 1 ? 'file' : 'files'})</span>

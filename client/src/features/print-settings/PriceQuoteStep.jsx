@@ -44,11 +44,11 @@ export default function PriceQuoteStep({ onNext, onBack }) {
       {/* Top Header */}
       <div className="flex-shrink-0 flex items-center justify-between pb-2 border-b border-slate-200">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold text-xs">
+          <div className="w-8 h-8 rounded-lg bg-[#0071e3] text-white flex items-center justify-center font-bold text-xs">
             3/4
           </div>
           <div>
-            <h2 className="text-lg sm:text-xl font-black text-slate-900 leading-tight">
+            <h2 className="text-lg sm:text-xl font-semibold tracking-tight text-slate-900 leading-tight">
               Transparent Price Breakdown
             </h2>
             <p className="text-[11px] text-slate-500 hidden sm:block">
@@ -60,7 +60,7 @@ export default function PriceQuoteStep({ onNext, onBack }) {
         <button
           type="button"
           onClick={resetSession}
-          className="touch-btn px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-bold flex items-center space-x-1 transition"
+          className="touch-btn px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-medium flex items-center space-x-1 transition"
           title="Cancel session"
         >
           <XCircle className="w-3.5 h-3.5" />
@@ -153,16 +153,16 @@ export default function PriceQuoteStep({ onNext, onBack }) {
         </div>
 
         {/* Grand Total Box */}
-        <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex items-baseline justify-between flex-shrink-0">
+        <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80 flex items-baseline justify-between flex-shrink-0">
           <div>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">
               Final Amount Payable
             </span>
             <span className="text-[11px] text-slate-400">Zero hidden fees or service charges</span>
           </div>
 
           <div className="text-right">
-            <span className="text-3xl font-black text-brand-600 tracking-tight">
+            <span className="text-3xl font-semibold text-slate-900 tracking-tight">
               {quote.currencySymbol}{quote.totalAmount.toFixed(2)}
             </span>
             <div className="text-[10px] text-slate-400">All campus taxes included</div>
@@ -183,7 +183,7 @@ export default function PriceQuoteStep({ onNext, onBack }) {
         <button
           onClick={handleProceedToPayment}
           disabled={submitting}
-          className="touch-btn px-7 py-3 rounded-xl text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-500/25 flex items-center space-x-2 transition active:scale-95"
+          className="touch-btn px-7 py-3 rounded-xl text-sm font-semibold bg-[#0071e3] hover:bg-[#0077ed] text-white shadow-sm flex items-center space-x-2 transition active:scale-[0.98] disabled:bg-slate-200 disabled:text-slate-400"
         >
           <CreditCard className="w-4 h-4" />
           <span>{submitting ? 'Creating Order...' : 'Continue to Payment'}</span>

@@ -17,7 +17,7 @@ export default function QRTransferModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-navy-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl relative border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
         <button
           onClick={onClose}
@@ -27,12 +27,12 @@ export default function QRTransferModal({ isOpen, onClose }) {
         </button>
 
         <div className="text-center space-y-4">
-          <div className="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mx-auto border border-brand-100 shadow-sm">
-            <Smartphone className="w-7 h-7" />
+          <div className="w-12 h-12 bg-slate-100 text-slate-800 rounded-2xl flex items-center justify-center mx-auto border border-slate-200 shadow-xs">
+            <Smartphone className="w-6 h-6 text-[#0071e3]" />
           </div>
 
           <div>
-            <h3 className="text-2xl font-bold text-slate-900">Transfer from Your Phone</h3>
+            <h3 className="text-2xl font-semibold tracking-tight text-slate-900">Transfer from Your Phone</h3>
             <p className="text-sm text-slate-600 mt-1">
               Point your phone camera at this QR code to upload documents to <strong>{currentKiosk?.name || 'this kiosk'}</strong>.
             </p>
@@ -66,7 +66,7 @@ export default function QRTransferModal({ isOpen, onClose }) {
                 href={session.mobileUploadUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="touch-btn flex-1 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold py-2.5 rounded-xl flex items-center justify-center space-x-2 shadow-sm"
+                className="touch-btn flex-1 bg-slate-900 hover:bg-black text-white text-sm font-semibold py-2.5 rounded-xl flex items-center justify-center space-x-2 shadow-xs transition active:scale-[0.98]"
               >
                 <span>Open Mobile Uploader</span>
                 <ExternalLink className="w-4 h-4" />
@@ -89,7 +89,7 @@ export default function QRTransferModal({ isOpen, onClose }) {
                 onClose();
                 setCurrentStep(3);
               }}
-              className="touch-btn w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl flex items-center justify-center space-x-2 shadow-md transition active:scale-95 text-sm"
+              className="touch-btn w-full bg-[#0071e3] hover:bg-[#0077ed] text-white font-semibold py-3.5 rounded-xl flex items-center justify-center space-x-2 shadow-sm transition active:scale-[0.98] text-sm"
             >
               <span>Done Uploading / View Uploaded Files</span>
               <ArrowRight className="w-4 h-4 ml-1" />

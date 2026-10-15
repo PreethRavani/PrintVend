@@ -2,12 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
 @layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
   body {
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
     touch-action: manipulation;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
   }
 
   input, textarea, select {
@@ -16,33 +28,42 @@
   }
 }
 
-/* Touch-optimized button utilities */
+/* Apple & Emil Kowalski tactile button micro-interactions */
 .touch-btn {
-  min-height: 48px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   border-radius: 0.75rem;
-  transition: all 0.15s ease-in-out;
+  transition: transform 120ms var(--ease-out), background-color 150ms ease, border-color 150ms ease, opacity 150ms ease;
 }
 
 .touch-btn:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
-/* Custom scrollbars */
+/* Clean, unobtrusive scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: rgba(100, 116, 139, 0.6);
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

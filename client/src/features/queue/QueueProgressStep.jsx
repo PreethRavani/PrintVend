@@ -39,11 +39,11 @@ export default function QueueProgressStep({ onReadyForCollection }) {
     <div className="h-full flex flex-col justify-between overflow-hidden gap-2 max-w-xl mx-auto w-full py-1">
       {/* Top Header */}
       <div className="flex-shrink-0 text-center space-y-1">
-        <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold uppercase tracking-wider">
+        <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold uppercase tracking-wider">
           <CheckCircle className="w-3 h-3" />
           <span>Payment Approved • Dispenser Active</span>
         </div>
-        <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
+        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 leading-tight">
           Printing in Progress
         </h2>
         <p className="text-xs text-slate-500">
@@ -52,16 +52,16 @@ export default function QueueProgressStep({ onReadyForCollection }) {
       </div>
 
       {/* Progress & Live Tracker Card */}
-      <div className="flex-1 min-h-0 bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden">
+      <div className="flex-1 min-h-0 bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between overflow-hidden">
         {/* Animated Printer Visualizer */}
         <div className="flex flex-col items-center justify-center text-center space-y-2 py-1 flex-shrink-0">
           <div className="relative">
             <div
               className={`w-20 h-20 rounded-2xl flex items-center justify-center transition-all ${
                 isReady
-                  ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
+                  ? 'bg-emerald-600 text-white shadow-sm'
                   : isPrinting
-                  ? 'bg-brand-600 text-white shadow-lg shadow-brand-500/30 animate-pulse'
+                  ? 'bg-slate-900 text-white shadow-sm'
                   : 'bg-slate-800 text-white'
               }`}
             >
@@ -69,15 +69,15 @@ export default function QueueProgressStep({ onReadyForCollection }) {
             </div>
 
             {!isReady && (
-              <div className="absolute -top-1.5 -right-1.5 bg-white rounded-full p-1 shadow-md border border-slate-200">
-                <Loader2 className="w-4 h-4 text-brand-600 animate-spin" />
+              <div className="absolute -top-1.5 -right-1.5 bg-white rounded-full p-1 shadow-xs border border-slate-200">
+                <Loader2 className="w-4 h-4 text-[#0071e3] animate-spin" />
               </div>
             )}
           </div>
 
           <div>
-            <div className="text-[10px] uppercase font-extrabold tracking-wider text-slate-400">Current Phase</div>
-            <div className="text-lg font-black text-slate-900 leading-tight">
+            <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-400">Current Phase</div>
+            <div className="text-lg font-semibold text-slate-900 leading-tight">
               {isReady
                 ? 'Ready for Collection!'
                 : isPrinting
@@ -89,14 +89,14 @@ export default function QueueProgressStep({ onReadyForCollection }) {
 
         {/* Live Progress Bar */}
         <div className="space-y-1 py-1 flex-shrink-0">
-          <div className="flex justify-between text-xs font-bold text-slate-600">
+          <div className="flex justify-between text-xs font-semibold text-slate-600">
             <span>Progress</span>
-            <span className="font-mono text-brand-600 font-extrabold">{progressPercent}%</span>
+            <span className="font-mono text-slate-900 font-semibold">{progressPercent}%</span>
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden shadow-inner">
+          <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
             <div
-              className={`h-2.5 rounded-full transition-all duration-500 ${
-                isReady ? 'bg-emerald-500' : 'bg-gradient-to-r from-brand-500 to-cyan-500'
+              className={`h-2 rounded-full transition-all duration-300 ${
+                isReady ? 'bg-emerald-600' : 'bg-[#0071e3]'
               }`}
               style={{ width: `${progressPercent}%` }}
             />
@@ -156,7 +156,7 @@ export default function QueueProgressStep({ onReadyForCollection }) {
         <div className="flex-shrink-0 pt-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <button
             onClick={onReadyForCollection}
-            className="touch-btn w-full py-3.5 rounded-xl text-base font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/30 flex items-center justify-center space-x-2 transition active:scale-95"
+            className="touch-btn w-full py-3.5 rounded-xl text-base font-semibold bg-[#0071e3] hover:bg-[#0077ed] text-white shadow-sm flex items-center justify-center space-x-2 transition active:scale-[0.98]"
           >
             <span>Collect Printed Documents</span>
             <ArrowRight className="w-4 h-4 ml-1" />

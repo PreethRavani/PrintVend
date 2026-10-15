@@ -108,10 +108,10 @@ export default function MobileUploadPage() {
       <div className="max-w-md w-full mx-auto space-y-6 pt-4">
         {/* Mobile Header */}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 bg-gradient-to-tr from-brand-600 to-cyan-400 rounded-2xl flex items-center justify-center mx-auto shadow-md text-white">
-            <Smartphone className="w-7 h-7" />
+          <div className="w-12 h-12 bg-[#0071e3] rounded-2xl flex items-center justify-center mx-auto shadow-sm text-white">
+            <Smartphone className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-black text-slate-900">Mobile Document Transfer</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Mobile Document Transfer</h1>
           <p className="text-xs text-slate-500">
             Smart Campus Print • Cross-Device Session Sync
           </p>
@@ -119,16 +119,16 @@ export default function MobileUploadPage() {
 
         {/* Session Card */}
         {!activeSession ? (
-          <div className="bg-white rounded-3xl p-6 shadow-md border border-slate-200 space-y-4">
-            <h2 className="text-sm font-bold text-slate-800">Connect to Kiosk Terminal</h2>
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-4">
+            <h2 className="text-sm font-semibold text-slate-800">Connect to Kiosk Terminal</h2>
             
             {/* Quick 1-click direct session creation for testing */}
-            <div className="p-3.5 bg-brand-50 rounded-2xl border border-brand-200/80 space-y-2">
-              <span className="text-xs font-bold text-brand-900 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-brand-600" />
+            <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
+              <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#0071e3]" />
                 <span>Quick Test / Direct Mobile Session</span>
               </span>
-              <p className="text-[11px] text-brand-700">
+              <p className="text-[11px] text-slate-600">
                 Don't have a session code? Tap below to start an instant upload session for the main campus kiosk:
               </p>
               <button
@@ -148,9 +148,9 @@ export default function MobileUploadPage() {
                   }
                 }}
                 disabled={loadingSession}
-                className="touch-btn w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-sm transition"
+                className="touch-btn w-full bg-[#0071e3] hover:bg-[#0077ed] text-white font-semibold py-2.5 rounded-xl text-xs transition active:scale-[0.98]"
               >
-                {loadingSession ? 'Initializing Session...' : '⚡ Start Direct Mobile Upload Session'}
+                {loadingSession ? 'Initializing Session...' : 'Start Direct Mobile Upload Session'}
               </button>
             </div>
 
@@ -167,14 +167,14 @@ export default function MobileUploadPage() {
                 placeholder="e.g. SES-1029-A1B2"
                 value={sessionIdInput}
                 onChange={(e) => setSessionIdInput(e.target.value.toUpperCase())}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-500 uppercase"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0071e3] uppercase"
               />
             </div>
 
             <button
               onClick={() => loadSession(sessionIdInput)}
               disabled={!sessionIdInput.trim() || loadingSession}
-              className="touch-btn w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-md transition text-xs"
+              className="touch-btn w-full bg-slate-900 hover:bg-black text-white font-semibold py-3.5 rounded-xl transition text-xs active:scale-[0.98] disabled:bg-slate-200 disabled:text-slate-400"
             >
               {loadingSession ? 'Connecting...' : 'Connect with Code'}
             </button>
@@ -248,7 +248,7 @@ export default function MobileUploadPage() {
                   <span>{uploadProgress}%</span>
                 </div>
                 <div className="w-full bg-slate-100 rounded-full h-2">
-                  <div className="bg-brand-600 h-2 rounded-full" style={{ width: `${uploadProgress}%` }} />
+                  <div className="bg-[#0071e3] h-2 rounded-full" style={{ width: `${uploadProgress}%` }} />
                 </div>
               </div>
             )}

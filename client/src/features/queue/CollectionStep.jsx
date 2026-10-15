@@ -9,38 +9,40 @@ import {
   Star,
   ThumbsUp,
   Sparkles,
-  Heart
+  Zap,
+  FileText,
+  Smartphone
 } from 'lucide-react';
 import { useKiosk } from '../../context/KioskContext';
 
 const FEEDBACK_TAGS = [
-  '⚡ Super Fast Printing',
-  '📄 Crisp Paper & Toner Quality',
-  '📱 Easy Mobile QR Transfer',
-  '💰 Transparent Pricing',
-  '🖥️ Smooth Touchscreen'
+  { id: 'fast', label: 'Fast Printing', icon: Zap },
+  { id: 'quality', label: 'Crisp Print Quality', icon: FileText },
+  { id: 'mobile', label: 'Easy Mobile Sync', icon: Smartphone },
+  { id: 'pricing', label: 'Clear Pricing', icon: CheckCircle2 },
+  { id: 'touch', label: 'Responsive Touchscreen', icon: ThumbsUp }
 ];
 
 export default function CollectionStep({ onCollected }) {
   const { activeJob, jobStatus, handleConfirmCollection } = useKiosk();
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
-  const [selectedTags, setSelectedTags] = useState(['⚡ Super Fast Printing', '📄 Crisp Paper & Toner Quality']);
+  const [selectedTags, setSelectedTags] = useState(['fast', 'quality']);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
   const collectionCode = jobStatus?.collectionCode || activeJob?.collectionCode || '4821';
 
-  const toggleTag = (tag) => {
+  const toggleTag = (tagId) => {
     setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+      prev.includes(tagId) ? prev.filter((t) => t !== tagId) : [...prev, tagId]
     );
   };
 
   const getRatingLabel = (stars) => {
     switch (stars) {
       case 5:
-        return '5/5 — Excellent & Super Fast!';
+        return '5/5 — Excellent & Fast';
       case 4:
         return '4/5 — Great & Smooth Experience';
       case 3:
@@ -70,11 +72,11 @@ export default function CollectionStep({ onCollected }) {
     <div className="h-full flex flex-col justify-between overflow-hidden gap-2 max-w-xl mx-auto w-full">
       {/* Top Header */}
       <div className="flex-shrink-0 text-center space-y-1 pb-1">
-        <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold uppercase tracking-wider">
+        <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold uppercase tracking-wider">
           <PackageCheck className="w-3.5 h-3.5" />
           <span>Tray Dispensed • Ready for Pickup</span>
         </div>
-        <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
+        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 leading-tight">
           Pick Up Your Documents
         </h2>
         <p className="text-xs text-slate-500">
@@ -90,15 +92,15 @@ export default function CollectionStep({ onCollected }) {
       )}
 
       {/* Main Collection & Feedback Card */}
-      <div className="flex-1 min-h-0 bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden">
+      <div className="flex-1 min-h-0 bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between overflow-hidden">
         {/* Star Review & Feedback Section */}
-        <div className="bg-gradient-to-br from-amber-50/70 via-orange-50/40 to-slate-50 p-4 rounded-xl border border-amber-200/80 text-center space-y-2 flex-shrink-0">
-          <div className="flex items-center justify-center space-x-1.5 text-[11px] font-extrabold text-amber-800 uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+        <div className="bg-slate-50/80 p-4 rounded-xl border border-slate-200/80 text-center space-y-2 flex-shrink-0">
+          <div className="flex items-center justify-center space-x-1.5 text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-[#0071e3]" />
             <span>Kiosk Print Quality & Satisfaction</span>
           </div>
 
-          <div className="text-xs font-semibold text-slate-700">
+          <div className="text-xs font-medium text-slate-600">
             How was your printing experience today?
           </div>
 
@@ -113,7 +115,7 @@ export default function CollectionStep({ onCollected }) {
                   onMouseEnter={() => setHoverRating(star)}
                   onMouseLeave={() => setHoverRating(0)}
                   onClick={() => setRating(star)}
-                  className="touch-btn p-1 transition transform hover:scale-125 focus:outline-none"
+                  className="touch-btn p-1 transition transform hover:scale-110 active:scale-95 focus:outline-none"
                   title={`${star} star`}
                 >
                   <Star
@@ -128,26 +130,28 @@ export default function CollectionStep({ onCollected }) {
             })}
           </div>
 
-          <div className="inline-block px-3 py-0.5 bg-white rounded-full border border-amber-200 text-[11px] font-bold text-amber-900">
+          <div className="inline-block px-3 py-0.5 bg-white rounded-full border border-slate-200 text-[11px] font-semibold text-slate-800">
             {getRatingLabel(hoverRating || rating)}
           </div>
 
-          {/* Quick Experience Feedback Tags */}
-          <div className="flex flex-wrap items-center justify-center gap-1 pt-1">
+          {/* Quick Experience Feedback Tags (Lucide SVG Icons, No Emojis) */}
+          <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
             {FEEDBACK_TAGS.map((tag) => {
-              const isSelected = selectedTags.includes(tag);
+              const isSelected = selectedTags.includes(tag.id);
+              const TagIcon = tag.icon;
               return (
                 <button
-                  key={tag}
+                  key={tag.id}
                   type="button"
-                  onClick={() => toggleTag(tag)}
-                  className={`px-2 py-0.5 rounded-lg text-[10px] font-semibold transition ${
+                  onClick={() => toggleTag(tag.id)}
+                  className={`px-2.5 py-1 rounded-lg text-[10px] font-medium transition flex items-center gap-1.5 ${
                     isSelected
-                      ? 'bg-amber-500 text-white shadow-2xs'
-                      : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200'
+                      ? 'bg-slate-900 text-white shadow-xs'
+                      : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200/80'
                   }`}
                 >
-                  {tag}
+                  <TagIcon className="w-3 h-3" />
+                  <span>{tag.label}</span>
                 </button>
               );
             })}
@@ -157,11 +161,11 @@ export default function CollectionStep({ onCollected }) {
         {/* Collection Reminders */}
         <div className="text-xs text-slate-600 py-1 space-y-1">
           <div className="flex items-center space-x-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0071e3]"></span>
             <span>Retrieve all physical pages from the illuminated tray below.</span>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0071e3]"></span>
             <span>Tap <strong>"I Have Collected My Prints"</strong> below to securely wipe files.</span>
           </div>
         </div>
@@ -180,7 +184,7 @@ export default function CollectionStep({ onCollected }) {
         <button
           onClick={onConfirm}
           disabled={isSubmitting}
-          className="touch-btn w-full py-3.5 rounded-xl text-base font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-500/25 flex items-center justify-center space-x-2 transition active:scale-95 disabled:bg-slate-300"
+          className="touch-btn w-full py-3.5 rounded-xl text-base font-semibold bg-[#0071e3] hover:bg-[#0077ed] text-white shadow-sm flex items-center justify-center space-x-2 transition active:scale-[0.98] disabled:bg-slate-200 disabled:text-slate-400"
         >
           <CheckCircle2 className="w-5 h-5" />
           <span>{isSubmitting ? 'Purging Files...' : 'I Have Collected My Prints'}</span>

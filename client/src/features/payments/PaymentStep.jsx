@@ -93,11 +93,11 @@ export default function PaymentStep({ onNext, onBack }) {
       {/* Top Header */}
       <div className="flex-shrink-0 flex items-center justify-between pb-2 border-b border-slate-200">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold text-xs">
+          <div className="w-8 h-8 rounded-lg bg-[#0071e3] text-white flex items-center justify-center font-bold text-xs">
             4/4
           </div>
           <div>
-            <h2 className="text-lg sm:text-xl font-black text-slate-900 leading-tight">
+            <h2 className="text-lg sm:text-xl font-semibold tracking-tight text-slate-900 leading-tight">
               Complete Payment
             </h2>
             <p className="text-[11px] text-slate-500 hidden sm:block">
@@ -109,7 +109,7 @@ export default function PaymentStep({ onNext, onBack }) {
         <button
           type="button"
           onClick={resetSession}
-          className="touch-btn px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-bold flex items-center space-x-1 transition"
+          className="touch-btn px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-medium flex items-center space-x-1 transition"
           title="Cancel session"
         >
           <XCircle className="w-3.5 h-3.5" />
@@ -118,9 +118,9 @@ export default function PaymentStep({ onNext, onBack }) {
       </div>
 
       {/* Order Summary Pill */}
-      <div className="flex-shrink-0 bg-white rounded-xl p-3 border border-slate-200 shadow-2xs flex items-center justify-between">
+      <div className="flex-shrink-0 bg-white rounded-xl p-3 border border-slate-200/80 shadow-2xs flex items-center justify-between">
         <div>
-          <span className="text-[10px] text-slate-400 font-bold uppercase">Job Reference</span>
+          <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Job Reference</span>
           <div className="text-sm font-mono font-bold text-slate-800 leading-none mt-0.5">
             {jobRef}
           </div>
@@ -130,8 +130,8 @@ export default function PaymentStep({ onNext, onBack }) {
         </div>
 
         <div className="text-right">
-          <span className="text-[10px] text-slate-400 font-bold uppercase">Amount Due</span>
-          <div className="text-2xl font-black text-brand-600 leading-none mt-0.5">
+          <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Amount Due</span>
+          <div className="text-2xl font-semibold text-slate-900 leading-none mt-0.5 tracking-tight">
             {currencySymbol}{amount.toFixed(2)}
           </div>
         </div>
@@ -142,10 +142,10 @@ export default function PaymentStep({ onNext, onBack }) {
         {/* VPA ID Banner */}
         <div className="flex-shrink-0 p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
           <div className="min-w-0">
-            <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">
               Virtual Payment Address (VPA ID)
             </span>
-            <span className="text-xs font-mono font-black text-brand-700 truncate block">
+            <span className="text-xs font-mono font-semibold text-slate-900 truncate block">
               {KIOSK_VPA_ID}
             </span>
           </div>
@@ -174,8 +174,8 @@ export default function PaymentStep({ onNext, onBack }) {
                 Generating UPI QR...
               </div>
             )}
-            <div className="text-[10px] font-bold text-slate-600 mt-1">
-              Pay: <strong className="text-brand-700">{currencySymbol}{amount.toFixed(2)}</strong>
+            <div className="text-[10px] font-semibold text-slate-600 mt-1">
+              Pay: <strong className="text-slate-900">{currencySymbol}{amount.toFixed(2)}</strong>
             </div>
           </div>
           <p className="text-[10px] text-slate-400 font-medium mt-1">
@@ -196,7 +196,7 @@ export default function PaymentStep({ onNext, onBack }) {
               type="checkbox"
               checked={forceFailTest}
               onChange={(e) => setForceFailTest(e.target.checked)}
-              className="rounded text-brand-600 focus:ring-brand-500 w-3.5 h-3.5"
+              className="rounded text-slate-900 focus:ring-slate-900 w-3.5 h-3.5"
             />
             <span>Simulate Payment Failure (Retry Demo)</span>
           </label>
@@ -219,7 +219,7 @@ export default function PaymentStep({ onNext, onBack }) {
           type="button"
           onClick={() => processPaymentSubmission(false)}
           disabled={isProcessing}
-          className="touch-btn flex-1 py-3 px-6 rounded-xl text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-500/25 flex items-center justify-center space-x-2 active:scale-95 transition disabled:bg-slate-300"
+          className="touch-btn flex-1 py-3 px-6 rounded-xl text-sm font-semibold bg-[#0071e3] hover:bg-[#0077ed] text-white shadow-sm flex items-center justify-center space-x-2 active:scale-[0.98] transition disabled:bg-slate-200 disabled:text-slate-400"
         >
           {isProcessing ? (
             <>

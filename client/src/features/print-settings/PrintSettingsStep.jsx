@@ -64,11 +64,11 @@ export default function PrintSettingsStep({ onNext, onBack }) {
       {/* Top Header */}
       <div className="flex-shrink-0 flex items-center justify-between pb-2 border-b border-slate-200">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold text-xs">
+          <div className="w-8 h-8 rounded-lg bg-[#0071e3] text-white flex items-center justify-center font-bold text-xs">
             2/4
           </div>
           <div>
-            <h2 className="text-lg sm:text-xl font-black text-slate-900 leading-tight">
+            <h2 className="text-lg sm:text-xl font-semibold tracking-tight text-slate-900 leading-tight">
               Configure Print Settings
             </h2>
             <p className="text-[11px] text-slate-500 hidden sm:block">
@@ -78,13 +78,13 @@ export default function PrintSettingsStep({ onNext, onBack }) {
         </div>
 
         <div className="flex items-center space-x-2 text-xs">
-          <div className="px-2.5 py-1 bg-slate-100 rounded-lg text-slate-700 font-bold border border-slate-200">
+          <div className="px-2.5 py-1 bg-slate-100 rounded-lg text-slate-700 font-semibold border border-slate-200">
             {documents.length} {documents.length === 1 ? 'file' : 'files'} ({totalOriginalPages} pages)
           </div>
           <button
             type="button"
             onClick={resetSession}
-            className="touch-btn px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-bold flex items-center space-x-1 transition"
+            className="touch-btn px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-medium flex items-center space-x-1 transition"
             title="Cancel session"
           >
             <XCircle className="w-3.5 h-3.5" />
@@ -100,22 +100,22 @@ export default function PrintSettingsStep({ onNext, onBack }) {
           {/* Row 1: Paper Size & Color Mode */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 flex-1 min-h-0">
             {/* Paper Size */}
-            <div className="bg-white rounded-2xl p-3 border border-slate-200 shadow-2xs flex flex-col justify-between">
-              <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5 pb-1">
-                <FileText className="w-3.5 h-3.5 text-brand-600" />
+            <div className="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs flex flex-col justify-between">
+              <span className="text-xs font-semibold text-slate-800 flex items-center gap-1.5 pb-1">
+                <FileText className="w-3.5 h-3.5 text-[#0071e3]" />
                 <span>Paper Size</span>
               </span>
               <div className="grid grid-cols-2 gap-2 mt-1">
                 <button
                   type="button"
                   onClick={() => setPrintSettings((prev) => ({ ...prev, paperSize: 'A4' }))}
-                  className={`touch-btn p-2 rounded-xl border-2 text-left flex flex-col justify-center transition ${
+                  className={`touch-btn p-2 rounded-xl border text-left flex flex-col justify-center transition ${
                     printSettings.paperSize === 'A4'
-                      ? 'border-brand-600 bg-brand-50/70 ring-1 ring-brand-500'
+                      ? 'border-slate-900 bg-slate-50 ring-1 ring-slate-900'
                       : 'border-slate-200 hover:border-slate-300 bg-white'
                   }`}
                 >
-                  <span className="font-extrabold text-xs text-slate-900">A4 Standard</span>
+                  <span className="font-semibold text-xs text-slate-900">A4 Standard</span>
                   <span className="text-[10px] text-slate-500">210 × 297 mm</span>
                 </button>
 
@@ -123,33 +123,33 @@ export default function PrintSettingsStep({ onNext, onBack }) {
                   type="button"
                   disabled={!isA3Supported}
                   onClick={() => setPrintSettings((prev) => ({ ...prev, paperSize: 'A3' }))}
-                  className={`touch-btn p-2 rounded-xl border-2 text-left flex flex-col justify-center transition ${
+                  className={`touch-btn p-2 rounded-xl border text-left flex flex-col justify-center transition ${
                     !isA3Supported
                       ? 'opacity-40 cursor-not-allowed bg-slate-50'
                       : printSettings.paperSize === 'A3'
-                      ? 'border-brand-600 bg-brand-50/70 ring-1 ring-brand-500'
+                      ? 'border-slate-900 bg-slate-50 ring-1 ring-slate-900'
                       : 'border-slate-200 hover:border-slate-300 bg-white'
                   }`}
                 >
-                  <span className="font-extrabold text-xs text-slate-900">A3 Poster</span>
+                  <span className="font-semibold text-xs text-slate-900">A3 Poster</span>
                   <span className="text-[10px] text-slate-500">297 × 420 mm</span>
                 </button>
               </div>
             </div>
 
             {/* Color Mode */}
-            <div className="bg-white rounded-2xl p-3 border border-slate-200 shadow-2xs flex flex-col justify-between">
-              <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5 pb-1">
-                <Palette className="w-3.5 h-3.5 text-brand-600" />
+            <div className="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs flex flex-col justify-between">
+              <span className="text-xs font-semibold text-slate-800 flex items-center gap-1.5 pb-1">
+                <Palette className="w-3.5 h-3.5 text-[#0071e3]" />
                 <span>Print Mode</span>
               </span>
               <div className="grid grid-cols-2 gap-2 mt-1">
                 <button
                   type="button"
                   onClick={() => setPrintSettings((prev) => ({ ...prev, printMode: 'BW' }))}
-                  className={`touch-btn p-2 rounded-xl border-2 text-left flex items-center space-x-2 transition ${
+                  className={`touch-btn p-2 rounded-xl border text-left flex items-center space-x-2 transition ${
                     printSettings.printMode === 'BW'
-                      ? 'border-brand-600 bg-brand-50/70 ring-1 ring-brand-500'
+                      ? 'border-slate-900 bg-slate-50 ring-1 ring-slate-900'
                       : 'border-slate-200 hover:border-slate-300 bg-white'
                   }`}
                 >
@@ -157,7 +157,7 @@ export default function PrintSettingsStep({ onNext, onBack }) {
                     B/W
                   </div>
                   <div>
-                    <div className="font-bold text-slate-900 text-xs">Black & White</div>
+                    <div className="font-semibold text-slate-900 text-xs">Black & White</div>
                     <div className="text-[10px] text-slate-500">₹2 / side</div>
                   </div>
                 </button>
@@ -166,19 +166,19 @@ export default function PrintSettingsStep({ onNext, onBack }) {
                   type="button"
                   disabled={!isColorSupported}
                   onClick={() => setPrintSettings((prev) => ({ ...prev, printMode: 'COLOR' }))}
-                  className={`touch-btn p-2 rounded-xl border-2 text-left flex items-center space-x-2 transition ${
+                  className={`touch-btn p-2 rounded-xl border text-left flex items-center space-x-2 transition ${
                     !isColorSupported
                       ? 'opacity-40 cursor-not-allowed bg-slate-50'
                       : printSettings.printMode === 'COLOR'
-                      ? 'border-brand-600 bg-brand-50/70 ring-1 ring-brand-500'
+                      ? 'border-slate-900 bg-slate-50 ring-1 ring-slate-900'
                       : 'border-slate-200 hover:border-slate-300 bg-white'
                   }`}
                 >
-                  <div className="w-6 h-6 rounded-md bg-gradient-to-tr from-pink-500 via-amber-400 to-cyan-400 text-white flex items-center justify-center font-bold text-[10px]">
-                    RGB
+                  <div className="w-6 h-6 rounded-md bg-[#0071e3] text-white flex items-center justify-center font-bold text-[10px]">
+                    Color
                   </div>
                   <div>
-                    <div className="font-bold text-slate-900 text-xs">Full Color</div>
+                    <div className="font-semibold text-slate-900 text-xs">Full Color</div>
                     <div className="text-[10px] text-slate-500">₹10 / side</div>
                   </div>
                 </button>
@@ -231,9 +231,9 @@ export default function PrintSettingsStep({ onNext, onBack }) {
                 <button
                   type="button"
                   onClick={() => setPrintSettings((prev) => ({ ...prev, duplex: false }))}
-                  className={`touch-btn p-2 rounded-xl border text-xs font-bold transition ${
+                  className={`touch-btn p-2 rounded-xl border text-xs font-semibold transition ${
                     !printSettings.duplex
-                      ? 'border-brand-600 bg-brand-50 text-brand-700'
+                      ? 'border-slate-900 bg-slate-50 text-slate-900'
                       : 'border-slate-200 text-slate-600 bg-white hover:bg-slate-50'
                   }`}
                 >
@@ -244,11 +244,11 @@ export default function PrintSettingsStep({ onNext, onBack }) {
                   type="button"
                   disabled={!isDuplexSupported}
                   onClick={() => setPrintSettings((prev) => ({ ...prev, duplex: true }))}
-                  className={`touch-btn p-2 rounded-xl border text-xs font-bold transition ${
+                  className={`touch-btn p-2 rounded-xl border text-xs font-semibold transition ${
                     !isDuplexSupported
                       ? 'opacity-40 cursor-not-allowed bg-slate-50'
                       : printSettings.duplex
-                      ? 'border-emerald-600 bg-emerald-50 text-emerald-800 ring-1 ring-emerald-500'
+                      ? 'border-slate-900 bg-slate-50 text-slate-900 ring-1 ring-slate-900'
                       : 'border-slate-200 text-slate-600 bg-white hover:bg-slate-50'
                   }`}
                 >
@@ -259,10 +259,10 @@ export default function PrintSettingsStep({ onNext, onBack }) {
           </div>
 
           {/* Row 3: Page Range & Orientation */}
-          <div className="bg-white rounded-2xl p-3 border border-slate-200 shadow-2xs">
+          <div className="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div>
-                <label className="text-xs font-bold text-slate-700 block mb-0.5">
+                <label className="text-xs font-semibold text-slate-700 block mb-0.5">
                   Page Range
                 </label>
                 <input
@@ -271,13 +271,13 @@ export default function PrintSettingsStep({ onNext, onBack }) {
                   value={rangeInput}
                   onChange={(e) => setRangeInput(e.target.value)}
                   onBlur={handleRangeBlur}
-                  className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-900"
                 />
                 {rangeError && <p className="text-[10px] text-rose-600 mt-0.5">{rangeError}</p>}
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-700 block mb-0.5">
+                <label className="text-xs font-semibold text-slate-700 block mb-0.5">
                   Orientation
                 </label>
                 <select
@@ -285,7 +285,7 @@ export default function PrintSettingsStep({ onNext, onBack }) {
                   onChange={(e) =>
                     setPrintSettings((prev) => ({ ...prev, orientation: e.target.value }))
                   }
-                  className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-900"
                 >
                   <option value="PORTRAIT">Portrait (Vertical)</option>
                   <option value="LANDSCAPE">Landscape (Horizontal)</option>
@@ -296,10 +296,10 @@ export default function PrintSettingsStep({ onNext, onBack }) {
         </div>
 
         {/* Right Column (4 cols): Live Quote Summary Card */}
-        <div className="lg:col-span-4 bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden">
+        <div className="lg:col-span-4 bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col justify-between overflow-hidden">
           <div className="flex items-center justify-between border-b border-slate-100 pb-2 flex-shrink-0">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Estimated Quote</span>
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-brand-50 text-brand-700 border border-brand-200">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Estimated Quote</span>
+            <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-700 border border-slate-200/80">
               Live Calc
             </span>
           </div>
@@ -312,19 +312,19 @@ export default function PrintSettingsStep({ onNext, onBack }) {
             <div className="space-y-2 text-xs py-1">
               <div className="flex justify-between text-slate-600">
                 <span>Target Pages:</span>
-                <span className="font-bold text-slate-900">{quote.selectedPagesCount}</span>
+                <span className="font-semibold text-slate-900">{quote.selectedPagesCount}</span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>Copies:</span>
-                <span className="font-bold text-slate-900">× {quote.copies}</span>
+                <span className="font-semibold text-slate-900">× {quote.copies}</span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>Printed Sides:</span>
-                <span className="font-bold text-slate-900">{quote.totalSides} sides</span>
+                <span className="font-semibold text-slate-900">{quote.totalSides} sides</span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>Paper Sheets:</span>
-                <span className="font-bold text-brand-700 bg-brand-50 px-1.5 py-0.2 rounded border border-brand-200">
+                <span className="font-semibold text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200/80">
                   {quote.totalSheets} {quote.totalSheets === 1 ? 'sheet' : 'sheets'}
                 </span>
               </div>
@@ -336,8 +336,8 @@ export default function PrintSettingsStep({ onNext, onBack }) {
               </div>
 
               <div className="border-t border-slate-200 pt-2 flex justify-between items-baseline">
-                <span className="text-xs font-bold text-slate-800">Total Price:</span>
-                <span className="text-2xl font-black text-brand-600">
+                <span className="text-xs font-semibold text-slate-800">Total Price:</span>
+                <span className="text-2xl font-semibold text-slate-900 tracking-tight">
                   {quote.currencySymbol}{quote.totalAmount.toFixed(2)}
                 </span>
               </div>
@@ -350,10 +350,10 @@ export default function PrintSettingsStep({ onNext, onBack }) {
             <button
               onClick={onNext}
               disabled={quoteLoading || !quote || !!rangeError}
-              className={`touch-btn w-full py-2.5 rounded-xl text-xs font-bold shadow-md flex items-center justify-center space-x-1.5 transition ${
+              className={`touch-btn w-full py-2.5 rounded-xl text-xs font-semibold shadow-sm flex items-center justify-center space-x-1.5 transition ${
                 quote && !rangeError
-                  ? 'bg-brand-600 hover:bg-brand-700 text-white shadow-brand-500/25 active:scale-95'
-                  : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                  ? 'bg-[#0071e3] hover:bg-[#0077ed] text-white active:scale-[0.98]'
+                  : 'bg-slate-200 text-slate-400 cursor-not-allowed'
               }`}
             >
               <span>Review Price Breakdown</span>
