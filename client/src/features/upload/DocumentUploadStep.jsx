@@ -191,7 +191,7 @@ export default function DocumentUploadStep({ onNext, onBack }) {
   };
 
   return (
-    <div className="h-full flex flex-col justify-between overflow-hidden gap-2">
+    <div className="h-full flex flex-col overflow-hidden gap-2.5">
       {/* Top Bar: Compact Header & Live Sync Status */}
       <div className="flex-shrink-0 flex items-center justify-between pb-2 border-b border-slate-200">
         <div className="flex items-center space-x-3">
@@ -246,84 +246,87 @@ export default function DocumentUploadStep({ onNext, onBack }) {
       {/* 2-COLUMN SPLIT SECTION (Constrained height with zero outer scroll) */}
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch overflow-hidden">
         {/* LEFT COLUMN: Pre-Uploaded Official Documents (7 cols) */}
-        <div className="lg:col-span-7 bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-2xs flex flex-col justify-between overflow-hidden">
-          <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 flex-shrink-0">
-            <div className="flex items-center space-x-1.5">
-              <GraduationCap className="w-4 h-4 text-[#0071e3]" />
-              <h3 className="text-xs sm:text-sm font-semibold text-slate-900">
-                Official College Documents
-              </h3>
+        <div className="lg:col-span-7 bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-2xs flex flex-col overflow-hidden">
+          {/* Top Control Cluster: Header + Branch pills + Year pills grouped tightly with zero voids */}
+          <div className="flex-shrink-0 space-y-2 pb-2 border-b border-slate-100">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-1.5">
+                <GraduationCap className="w-4 h-4 text-[#0071e3]" />
+                <h3 className="text-xs sm:text-sm font-semibold text-slate-900">
+                  Official College Documents
+                </h3>
+              </div>
+              <span className="text-[10px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/80">
+                Verified Repository
+              </span>
             </div>
-            <span className="text-[10px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/80">
-              Verified Repository
-            </span>
-          </div>
 
-          {/* Branch Pills: iOS Segmented Control */}
-          <div className="flex-shrink-0 pt-1.5">
-            <div className="grid grid-cols-8 gap-0.5 p-0.5 bg-slate-100 rounded-xl border border-slate-200/80">
-              {BRANCHES.map((b) => {
-                const isActive = selectedBranch === b.code;
-                return (
+            {/* Branch Pills: iOS Segmented Control */}
+            <div>
+              <div className="grid grid-cols-8 gap-0.5 p-0.5 bg-slate-100 rounded-xl border border-slate-200/80">
+                {BRANCHES.map((b) => {
+                  const isActive = selectedBranch === b.code;
+                  return (
+                    <button
+                      key={b.code}
+                      type="button"
+                      onClick={() => setSelectedBranch(b.code)}
+                      className={`py-1 px-0.5 rounded-lg text-[11px] text-center transition font-semibold ${
+                        isActive
+                          ? 'bg-white text-slate-900 shadow-xs'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                      title={b.full}
+                    >
+                      {b.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Year Pills: iOS Segmented Control & Category filter */}
+            <div className="flex items-center justify-between gap-2">
+              <div className="grid grid-cols-4 gap-0.5 p-0.5 bg-slate-100 rounded-xl border border-slate-200/80 flex-1">
+                {YEARS.map((y) => {
+                  const isActive = selectedYear === y.code;
+                  return (
+                    <button
+                      key={y.code}
+                      type="button"
+                      onClick={() => setSelectedYear(y.code)}
+                      className={`py-1 rounded-lg text-[11px] text-center transition font-semibold ${
+                        isActive
+                          ? 'bg-white text-slate-900 shadow-xs'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      {y.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="flex items-center space-x-1 overflow-x-auto no-scrollbar">
+                {CATEGORIES.slice(0, 3).map((cat) => (
                   <button
-                    key={b.code}
-                    type="button"
-                    onClick={() => setSelectedBranch(b.code)}
-                    className={`py-1 px-0.5 rounded-lg text-[11px] text-center transition font-semibold ${
-                      isActive
-                        ? 'bg-white text-slate-900 shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                    title={b.full}
-                  >
-                    {b.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Year Pills: iOS Segmented Control & Category filter */}
-          <div className="flex-shrink-0 pt-1 flex items-center justify-between gap-2">
-            <div className="grid grid-cols-4 gap-0.5 p-0.5 bg-slate-100 rounded-xl border border-slate-200/80 flex-1">
-              {YEARS.map((y) => {
-                const isActive = selectedYear === y.code;
-                return (
-                  <button
-                    key={y.code}
-                    type="button"
-                    onClick={() => setSelectedYear(y.code)}
-                    className={`py-1 rounded-lg text-[11px] text-center transition font-semibold ${
-                      isActive
-                        ? 'bg-white text-slate-900 shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900'
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`px-2 py-1 rounded-lg text-[10px] font-medium transition flex-shrink-0 ${
+                      selectedCategory === cat
+                        ? 'bg-slate-900 text-white'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200/60'
                     }`}
                   >
-                    {y.label}
+                    {cat}
                   </button>
-                );
-              })}
-            </div>
-
-            <div className="flex items-center space-x-1 overflow-x-auto no-scrollbar">
-              {CATEGORIES.slice(0, 3).map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-2 py-1 rounded-lg text-[10px] font-medium transition flex-shrink-0 ${
-                    selectedCategory === cat
-                      ? 'bg-slate-900 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200/60'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Catalog Document List (Strictly scrollable inside card only) */}
-          <div className="flex-1 min-h-[140px] max-h-[185px] overflow-y-auto space-y-1.5 mt-2 pr-1">
+          <div className="flex-1 min-h-0 overflow-y-auto space-y-1.5 pt-2 pr-1">
             {catalogLoading ? (
               <div className="h-full flex items-center justify-center text-slate-400 text-xs py-6">
                 <RefreshCw className="w-4 h-4 animate-spin mr-1.5 text-brand-600" />
@@ -389,7 +392,7 @@ export default function DocumentUploadStep({ onNext, onBack }) {
         </div>
 
         {/* RIGHT COLUMN: Mobile Phone QR Upload (5 cols) */}
-        <div className="lg:col-span-5 bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-2xs flex flex-col justify-between overflow-hidden">
+        <div className="lg:col-span-5 bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-2xs flex flex-col overflow-hidden">
           <div className="flex items-center justify-between pb-1.5 border-b border-slate-100 flex-shrink-0">
             <div className="flex items-center space-x-1.5">
               <Smartphone className="w-4 h-4 text-[#0071e3]" />
@@ -402,28 +405,41 @@ export default function DocumentUploadStep({ onNext, onBack }) {
             </span>
           </div>
 
-          {/* Centered QR code */}
-          <div className="flex-1 flex flex-col items-center justify-center text-center py-1">
+          {/* Centered QR code and Structured 3-Step Guide */}
+          <div className="flex-1 min-h-0 flex flex-col items-center justify-center text-center py-2 px-1">
             {session?.qrCodeUrl ? (
-              <div className="p-1.5 bg-white rounded-xl shadow-xs border border-slate-200">
+              <div className="p-2 bg-white rounded-2xl shadow-xs border border-slate-200">
                 <img
                   src={session.qrCodeUrl}
                   alt="Upload QR"
-                  className="w-28 h-28 sm:w-32 sm:h-32 rounded-lg"
+                  className="w-32 h-32 sm:w-36 sm:h-36 rounded-xl"
                 />
               </div>
             ) : (
-              <div className="w-28 h-28 flex items-center justify-center bg-slate-100 rounded-xl text-slate-400 text-xs">
+              <div className="w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center bg-slate-100 rounded-2xl text-slate-400 text-xs">
                 Generating QR...
               </div>
             )}
-            <p className="text-[10px] text-slate-500 font-medium mt-1">
-              Scan with phone camera to transfer personal files
-            </p>
+
+            {/* 3-Step Clear Visual Flow */}
+            <div className="w-full max-w-xs mt-2.5 grid grid-cols-3 gap-1.5 text-center">
+              <div className="bg-slate-50 border border-slate-200/70 rounded-xl p-1.5">
+                <span className="text-[9px] font-bold text-[#0071e3] block">1. SCAN</span>
+                <span className="text-[10px] text-slate-600 font-medium leading-tight block mt-0.5">Open camera</span>
+              </div>
+              <div className="bg-slate-50 border border-slate-200/70 rounded-xl p-1.5">
+                <span className="text-[9px] font-bold text-[#0071e3] block">2. UPLOAD</span>
+                <span className="text-[10px] text-slate-600 font-medium leading-tight block mt-0.5">Pick files</span>
+              </div>
+              <div className="bg-slate-50 border border-slate-200/70 rounded-xl p-1.5">
+                <span className="text-[9px] font-bold text-[#0071e3] block">3. PRINT</span>
+                <span className="text-[10px] text-slate-600 font-medium leading-tight block mt-0.5">Syncs here</span>
+              </div>
+            </div>
           </div>
 
           {/* Testing actions row */}
-          <div className="flex-shrink-0 space-y-1 pt-1 border-t border-slate-100">
+          <div className="flex-shrink-0 space-y-1.5 pt-2 border-t border-slate-100">
             <div className="flex gap-1.5">
               <a
                 href={session?.mobileUploadUrl || '#'}

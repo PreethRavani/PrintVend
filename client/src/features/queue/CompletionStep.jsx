@@ -44,7 +44,7 @@ export default function CompletionStep({ onFinish }) {
   }, [resetSession]);
 
   return (
-    <div className="h-full flex flex-col justify-between overflow-hidden gap-2 max-w-md mx-auto w-full text-center py-1">
+    <div className="h-full flex flex-col justify-center overflow-hidden gap-3 max-w-md mx-auto w-full text-center py-1">
       {/* Celebration Header */}
       <div className="flex-shrink-0 space-y-1">
         <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl mx-auto flex items-center justify-center border border-emerald-200 shadow-xs">
@@ -64,7 +64,7 @@ export default function CompletionStep({ onFinish }) {
       </div>
 
       {/* Audit & Cleanup Confirmation Card */}
-      <div className="flex-1 min-h-0 bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm text-left flex flex-col justify-between overflow-hidden">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm text-left flex flex-col gap-3 overflow-hidden">
         <div className="flex justify-between items-center pb-2 border-b border-slate-100 flex-shrink-0">
           <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Print Job Receipt</span>
           <span className="font-mono text-xs font-semibold text-slate-800">

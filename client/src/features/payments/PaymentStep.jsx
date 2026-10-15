@@ -89,7 +89,7 @@ export default function PaymentStep({ onNext, onBack }) {
   };
 
   return (
-    <div className="h-full flex flex-col justify-between overflow-hidden gap-2 max-w-xl mx-auto w-full">
+    <div className="h-full flex flex-col justify-center overflow-hidden gap-3 max-w-xl mx-auto w-full py-1">
       {/* Top Header */}
       <div className="flex-shrink-0 flex items-center justify-between pb-2 border-b border-slate-200">
         <div className="flex items-center space-x-3">
@@ -138,7 +138,7 @@ export default function PaymentStep({ onNext, onBack }) {
       </div>
 
       {/* Unified Single-View Payment Card */}
-      <div className="flex-1 min-h-0 bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col gap-3 overflow-hidden">
         {/* VPA ID Banner */}
         <div className="flex-shrink-0 p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
           <div className="min-w-0">
@@ -161,7 +161,7 @@ export default function PaymentStep({ onNext, onBack }) {
         </div>
 
         {/* Dynamic QR Code */}
-        <div className="flex-1 flex flex-col items-center justify-center text-center py-2 min-h-0">
+        <div className="flex flex-col items-center justify-center text-center py-1">
           <div className="p-2 bg-white rounded-xl shadow-xs border border-slate-200">
             {upiQrDataUrl ? (
               <img

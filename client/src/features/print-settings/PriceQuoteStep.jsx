@@ -40,7 +40,7 @@ export default function PriceQuoteStep({ onNext, onBack }) {
   }
 
   return (
-    <div className="h-full flex flex-col justify-between overflow-hidden gap-2 max-w-2xl mx-auto w-full">
+    <div className="h-full flex flex-col justify-center overflow-hidden gap-3 max-w-2xl mx-auto w-full py-1">
       {/* Top Header */}
       <div className="flex-shrink-0 flex items-center justify-between pb-2 border-b border-slate-200">
         <div className="flex items-center space-x-3">
@@ -75,7 +75,7 @@ export default function PriceQuoteStep({ onNext, onBack }) {
       )}
 
       {/* Main Breakdown Receipt Card */}
-      <div className="flex-1 min-h-0 bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col gap-3 overflow-hidden">
         {/* Top Summary Badges */}
         <div className="flex items-center justify-between pb-2 border-b border-slate-100 flex-shrink-0">
           <div className="flex items-center space-x-2">
@@ -102,7 +102,7 @@ export default function PriceQuoteStep({ onNext, onBack }) {
         </div>
 
         {/* Itemized Lines */}
-        <div className="space-y-1.5 text-xs py-2 flex-1 flex flex-col justify-around">
+        <div className="space-y-2 text-xs py-1">
           <div className="flex justify-between py-1 border-b border-slate-50">
             <span className="text-slate-600 flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5 text-slate-400" />

@@ -29,7 +29,7 @@ export default function KioskPage() {
       {currentStep === 1 && <Header />}
 
       {/* Main Kiosk Viewport: occupies remaining height with zero page scroll */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-3 flex flex-col justify-center min-h-0 overflow-hidden">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-3 flex flex-col min-h-0 overflow-hidden">
         {currentStep === 1 && (
           <div className="h-full flex flex-col justify-center overflow-y-auto no-scrollbar">
             <WelcomeScreen onStartSession={handleStartSession} />

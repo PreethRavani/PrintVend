@@ -36,7 +36,7 @@ export default function QueueProgressStep({ onReadyForCollection }) {
   };
 
   return (
-    <div className="h-full flex flex-col justify-between overflow-hidden gap-2 max-w-xl mx-auto w-full py-1">
+    <div className="h-full flex flex-col justify-center overflow-hidden gap-3 max-w-xl mx-auto w-full py-1">
       {/* Top Header */}
       <div className="flex-shrink-0 text-center space-y-1">
         <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold uppercase tracking-wider">
@@ -52,7 +52,7 @@ export default function QueueProgressStep({ onReadyForCollection }) {
       </div>
 
       {/* Progress & Live Tracker Card */}
-      <div className="flex-1 min-h-0 bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between overflow-hidden">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col gap-3.5 overflow-hidden">
         {/* Animated Printer Visualizer */}
         <div className="flex flex-col items-center justify-center text-center space-y-2 py-1 flex-shrink-0">
           <div className="relative">

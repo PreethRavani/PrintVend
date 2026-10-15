@@ -60,7 +60,7 @@ export default function PrintSettingsStep({ onNext, onBack }) {
   const isDuplexSupported = currentKiosk?.supportedDuplex ?? true;
 
   return (
-    <div className="h-full flex flex-col justify-between overflow-hidden gap-2">
+    <div className="h-full flex flex-col overflow-hidden gap-2.5">
       {/* Top Header */}
       <div className="flex-shrink-0 flex items-center justify-between pb-2 border-b border-slate-200">
         <div className="flex items-center space-x-3">
@@ -96,11 +96,11 @@ export default function PrintSettingsStep({ onNext, onBack }) {
       {/* Main Grid: Compact 8-col Settings + 4-col Quote Card (fits 100% on screen) */}
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch overflow-hidden">
         {/* Left Column (8 cols): Interactive Settings */}
-        <div className="lg:col-span-8 flex flex-col justify-between gap-2 overflow-hidden">
+        <div className="lg:col-span-8 flex flex-col gap-2.5 overflow-hidden">
           {/* Row 1: Paper Size & Color Mode */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 flex-1 min-h-0">
             {/* Paper Size */}
-            <div className="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs flex flex-col justify-between">
+            <div className="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs space-y-1.5">
               <span className="text-xs font-semibold text-slate-800 flex items-center gap-1.5 pb-1">
                 <FileText className="w-3.5 h-3.5 text-[#0071e3]" />
                 <span>Paper Size</span>
@@ -138,7 +138,7 @@ export default function PrintSettingsStep({ onNext, onBack }) {
             </div>
 
             {/* Color Mode */}
-            <div className="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs flex flex-col justify-between">
+            <div className="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs space-y-1.5">
               <span className="text-xs font-semibold text-slate-800 flex items-center gap-1.5 pb-1">
                 <Palette className="w-3.5 h-3.5 text-[#0071e3]" />
                 <span>Print Mode</span>
@@ -189,7 +189,7 @@ export default function PrintSettingsStep({ onNext, onBack }) {
           {/* Row 2: Copies & Duplex */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 flex-1 min-h-0">
             {/* Copies Stepper */}
-            <div className="bg-white rounded-2xl p-3 border border-slate-200 shadow-2xs flex flex-col justify-between">
+            <div className="bg-white rounded-2xl p-3 border border-slate-200 shadow-2xs space-y-1.5">
               <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5 pb-1">
                 <Copy className="w-3.5 h-3.5 text-brand-600" />
                 <span>Number of Copies</span>
@@ -216,7 +216,7 @@ export default function PrintSettingsStep({ onNext, onBack }) {
             </div>
 
             {/* Duplex (2-Sided) */}
-            <div className="bg-white rounded-2xl p-3 border border-slate-200 shadow-2xs flex flex-col justify-between">
+            <div className="bg-white rounded-2xl p-3 border border-slate-200 shadow-2xs space-y-1.5">
               <div className="flex items-center justify-between pb-1">
                 <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                   <Layers className="w-3.5 h-3.5 text-brand-600" />
@@ -296,7 +296,7 @@ export default function PrintSettingsStep({ onNext, onBack }) {
         </div>
 
         {/* Right Column (4 cols): Live Quote Summary Card */}
-        <div className="lg:col-span-4 bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col justify-between overflow-hidden">
+        <div className="lg:col-span-4 bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col overflow-hidden">
           <div className="flex items-center justify-between border-b border-slate-100 pb-2 flex-shrink-0">
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Estimated Quote</span>
             <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-700 border border-slate-200/80">
@@ -309,7 +309,7 @@ export default function PrintSettingsStep({ onNext, onBack }) {
               Calculating authoritative price...
             </div>
           ) : quote ? (
-            <div className="space-y-2 text-xs py-1">
+            <div className="space-y-2 text-xs py-2 flex-1">
               <div className="flex justify-between text-slate-600">
                 <span>Target Pages:</span>
                 <span className="font-semibold text-slate-900">{quote.selectedPagesCount}</span>
@@ -343,10 +343,10 @@ export default function PrintSettingsStep({ onNext, onBack }) {
               </div>
             </div>
           ) : (
-            <div className="text-center text-slate-400 text-xs py-4">No quote available</div>
+            <div className="text-center text-slate-400 text-xs py-4 flex-1">No quote available</div>
           )}
 
-          <div className="pt-2 border-t border-slate-100 flex-shrink-0">
+          <div className="mt-auto pt-2 border-t border-slate-100 flex-shrink-0">
             <button
               onClick={onNext}
               disabled={quoteLoading || !quote || !!rangeError}
