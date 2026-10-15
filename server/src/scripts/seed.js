@@ -9,7 +9,10 @@ const logger = require('../utils/logger');
 
 async function seed(disconnectAfter = true) {
   try {
-    await connectDB();
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+      await connectDB();
+    }
     logger.info('Starting database seeding...');
 
     // 1. Seed Kiosks
