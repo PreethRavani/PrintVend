@@ -36,47 +36,48 @@ export default function QueueProgressStep({ onReadyForCollection }) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 py-4">
-      {/* Step Header */}
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold uppercase tracking-wider">
-          <CheckCircle className="w-3.5 h-3.5" />
-          <span>Payment Confirmed • Job In Spooler</span>
+    <div className="h-full flex flex-col justify-between overflow-hidden gap-2 max-w-xl mx-auto w-full py-1">
+      {/* Top Header */}
+      <div className="flex-shrink-0 text-center space-y-1">
+        <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold uppercase tracking-wider">
+          <CheckCircle className="w-3 h-3" />
+          <span>Payment Approved • Dispenser Active</span>
         </div>
-        <h2 className="text-3xl font-extrabold text-slate-900">Printing in Progress</h2>
-        <p className="text-sm text-slate-500">
-          Your document has been sent to the physical dispenser queue.
+        <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
+          Printing in Progress
+        </h2>
+        <p className="text-xs text-slate-500">
+          Your documents are being spooled and printed.
         </p>
       </div>
 
       {/* Progress & Live Tracker Card */}
-      <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl space-y-6 relative overflow-hidden">
+      <div className="flex-1 min-h-0 bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden">
         {/* Animated Printer Visualizer */}
-        <div className="py-6 flex flex-col items-center justify-center text-center space-y-4">
+        <div className="flex flex-col items-center justify-center text-center space-y-2 py-1 flex-shrink-0">
           <div className="relative">
             <div
-              className={`w-28 h-28 rounded-3xl flex items-center justify-center transition-all ${
+              className={`w-20 h-20 rounded-2xl flex items-center justify-center transition-all ${
                 isReady
-                  ? 'bg-emerald-500 text-white shadow-xl shadow-emerald-500/30 scale-105'
+                  ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
                   : isPrinting
-                  ? 'bg-brand-600 text-white shadow-xl shadow-brand-500/30 animate-pulse'
-                  : 'bg-slate-800 text-white shadow-lg'
+                  ? 'bg-brand-600 text-white shadow-lg shadow-brand-500/30 animate-pulse'
+                  : 'bg-slate-800 text-white'
               }`}
             >
-              <Printer className="w-14 h-14" />
+              <Printer className="w-10 h-10" />
             </div>
 
-            {/* Spinner indicator when working */}
             {!isReady && (
-              <div className="absolute -top-2 -right-2 bg-white rounded-full p-1.5 shadow-md border border-slate-200">
-                <Loader2 className="w-5 h-5 text-brand-600 animate-spin" />
+              <div className="absolute -top-1.5 -right-1.5 bg-white rounded-full p-1 shadow-md border border-slate-200">
+                <Loader2 className="w-4 h-4 text-brand-600 animate-spin" />
               </div>
             )}
           </div>
 
           <div>
-            <div className="text-xs uppercase font-bold tracking-wider text-slate-400">Current Phase</div>
-            <div className="text-2xl font-black text-slate-900 mt-0.5">
+            <div className="text-[10px] uppercase font-extrabold tracking-wider text-slate-400">Current Phase</div>
+            <div className="text-lg font-black text-slate-900 leading-tight">
               {isReady
                 ? 'Ready for Collection!'
                 : isPrinting
@@ -87,17 +88,15 @@ export default function QueueProgressStep({ onReadyForCollection }) {
         </div>
 
         {/* Live Progress Bar */}
-        <div className="space-y-2">
+        <div className="space-y-1 py-1 flex-shrink-0">
           <div className="flex justify-between text-xs font-bold text-slate-600">
             <span>Progress</span>
-            <span className="font-mono text-brand-600">{progressPercent}%</span>
+            <span className="font-mono text-brand-600 font-extrabold">{progressPercent}%</span>
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden shadow-inner">
+          <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden shadow-inner">
             <div
-              className={`h-3 rounded-full transition-all duration-500 ${
-                isReady
-                  ? 'bg-emerald-500'
-                  : 'bg-gradient-to-r from-brand-500 to-cyan-500'
+              className={`h-2.5 rounded-full transition-all duration-500 ${
+                isReady ? 'bg-emerald-500' : 'bg-gradient-to-r from-brand-500 to-cyan-500'
               }`}
               style={{ width: `${progressPercent}%` }}
             />
@@ -105,65 +104,65 @@ export default function QueueProgressStep({ onReadyForCollection }) {
         </div>
 
         {/* Job Details Grid */}
-        <div className="grid grid-cols-2 gap-3 pt-2">
-          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-            <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Job Number</span>
-            <span className="text-base font-mono font-bold text-slate-900 mt-1 block">
+        <div className="grid grid-cols-2 gap-2 text-xs py-1">
+          <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Job Number</span>
+            <span className="text-xs font-mono font-bold text-slate-900 truncate block mt-0.5">
               {activeJob?.jobNumber || 'JOB-ACTIVE'}
             </span>
           </div>
 
-          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-            <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Kiosk Station</span>
-            <span className="text-sm font-semibold text-slate-900 mt-1 block truncate">
+          <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Kiosk Station</span>
+            <span className="text-xs font-semibold text-slate-900 truncate block mt-0.5">
               {currentKiosk?.name || activeJob?.kioskId}
             </span>
           </div>
 
-          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-            <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Queue Rank</span>
-            <span className="text-base font-bold text-slate-900 mt-1 block">
+          <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Queue Rank</span>
+            <span className="text-xs font-bold text-slate-900 block mt-0.5">
               {queuePos === 1 ? 'Next to Print (#1)' : `Position #${queuePos}`}
             </span>
           </div>
 
-          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-            <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">Estimated Wait</span>
-            <span className="text-base font-bold text-slate-900 mt-1 block">
-              ~{waitMin} {waitMin === 1 ? 'minute' : 'minutes'}
+          <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Estimated Wait</span>
+            <span className="text-xs font-bold text-slate-900 block mt-0.5">
+              ~{waitMin} {waitMin === 1 ? 'min' : 'mins'}
             </span>
           </div>
         </div>
 
-        {/* Fast-Forward Simulation Button (For rapid testing / lab demo) */}
-        <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+        {/* Fast-Forward Simulation Demo Button */}
+        <div className="pt-1.5 border-t border-slate-100 flex items-center justify-between flex-shrink-0">
           <button
             onClick={handleFastForward}
-            className="touch-btn px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl flex items-center space-x-1.5 transition"
+            className="touch-btn px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold rounded-xl flex items-center space-x-1.5 transition"
             title="Fast forward simulation tick"
           >
-            <FastForward className="w-3.5 h-3.5 text-brand-600" />
-            <span>Fast-Forward Printer (Lab Demo)</span>
+            <FastForward className="w-3 h-3 text-brand-600" />
+            <span>Fast-Forward (Lab Demo)</span>
           </button>
 
-          <span className="text-[11px] text-slate-400 italic">
-            Auto-refreshes every 2.5 seconds
+          <span className="text-[10px] text-slate-400 italic">
+            Auto-refreshes every 2.5s
           </span>
         </div>
-
-        {/* If Ready, Prominent Collect Action */}
-        {isReady && (
-          <div className="pt-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <button
-              onClick={onReadyForCollection}
-              className="touch-btn w-full py-4 rounded-2xl text-lg font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-500/30 flex items-center justify-center space-x-2 transition active:scale-95"
-            >
-              <span>Collect Printed Documents</span>
-              <ArrowRight className="w-5 h-5 ml-1" />
-            </button>
-          </div>
-        )}
       </div>
+
+      {/* Docked Action button when ready */}
+      {isReady && (
+        <div className="flex-shrink-0 pt-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <button
+            onClick={onReadyForCollection}
+            className="touch-btn w-full py-3.5 rounded-xl text-base font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/30 flex items-center justify-center space-x-2 transition active:scale-95"
+          >
+            <span>Collect Printed Documents</span>
+            <ArrowRight className="w-4 h-4 ml-1" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -23,33 +23,23 @@ export default function KioskPage() {
     }
   };
 
-  const handleShowQrModalFromWelcome = async () => {
-    try {
-      if (!session) {
-        await startNewSession(null, false);
-      }
-      setShowQrModal(true);
-    } catch (err) {
-      alert(`Could not generate QR session: ${err.message}`);
-    }
-  };
-
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800">
-      <Header />
+    <div className="h-screen w-screen overflow-hidden flex flex-col bg-slate-50 text-slate-800">
+      {/* Navigation bar ONLY shown on Home / Welcome Screen as requested */}
+      {currentStep === 1 && <Header />}
 
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
+      {/* Main Kiosk Viewport: occupies remaining height with zero page scroll */}
+      <main className="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-3 flex flex-col justify-center min-h-0 overflow-hidden">
         {currentStep === 1 && (
-          <WelcomeScreen
-            onStartSession={handleStartSession}
-          />
+          <div className="h-full flex flex-col justify-center overflow-y-auto no-scrollbar">
+            <WelcomeScreen onStartSession={handleStartSession} />
+          </div>
         )}
 
         {currentStep === 3 && (
           <DocumentUploadStep
             onNext={() => setCurrentStep(4)}
             onBack={() => setCurrentStep(1)}
-            onShowQrModal={() => setShowQrModal(true)}
           />
         )}
 

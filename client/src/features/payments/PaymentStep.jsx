@@ -14,14 +14,15 @@ import {
   Copy,
   Check,
   RefreshCw,
-  Zap
+  Zap,
+  XCircle
 } from 'lucide-react';
 import { useKiosk } from '../../context/KioskContext';
 
 const KIOSK_VPA_ID = 'smartcampus.kiosk@upi';
 
 export default function PaymentStep({ onNext, onBack }) {
-  const { activeJob, quote, handlePayment } = useKiosk();
+  const { activeJob, quote, handlePayment, resetSession } = useKiosk();
 
   const [upiQrDataUrl, setUpiQrDataUrl] = useState('');
   const [copiedVpa, setCopiedVpa] = useState(false);
@@ -33,7 +34,6 @@ export default function PaymentStep({ onNext, onBack }) {
   const currencySymbol = quote?.currencySymbol || '₹';
   const jobRef = activeJob?.jobNumber || 'JOB-PRINT';
 
-  // Automatically generate dynamic UPI QR code on mount or when amount/job changes
   useEffect(() => {
     let isMounted = true;
     async function generateUPIQR() {
@@ -42,8 +42,8 @@ export default function PaymentStep({ onNext, onBack }) {
           2
         )}&cu=INR&tn=${encodeURIComponent(jobRef)}`;
         const dataUrl = await QRCode.toDataURL(upiUri, {
-          width: 260,
-          margin: 2,
+          width: 200,
+          margin: 1,
           color: {
             dark: '#0f172a',
             light: '#ffffff'
@@ -89,62 +89,63 @@ export default function PaymentStep({ onNext, onBack }) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 py-2">
-      {/* Step Header */}
-      <div className="text-center space-y-1.5 pb-4 border-b border-slate-200">
-        <span className="text-xs font-bold text-brand-600 uppercase tracking-wider bg-brand-50 px-2.5 py-0.5 rounded-full border border-brand-200">
-          Step 4 of 4: Payment
-        </span>
-        <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Complete Payment</h2>
-        <p className="text-sm text-slate-500">
-          Scan the dynamic UPI QR code or verify the VPA ID to approve simulated payment.
-        </p>
+    <div className="h-full flex flex-col justify-between overflow-hidden gap-2 max-w-xl mx-auto w-full">
+      {/* Top Header */}
+      <div className="flex-shrink-0 flex items-center justify-between pb-2 border-b border-slate-200">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold text-xs">
+            4/4
+          </div>
+          <div>
+            <h2 className="text-lg sm:text-xl font-black text-slate-900 leading-tight">
+              Complete Payment
+            </h2>
+            <p className="text-[11px] text-slate-500 hidden sm:block">
+              Scan dynamic UPI QR or verify VPA ID to pay
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={resetSession}
+          className="touch-btn px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-bold flex items-center space-x-1 transition"
+          title="Cancel session"
+        >
+          <XCircle className="w-3.5 h-3.5" />
+          <span>Cancel</span>
+        </button>
       </div>
 
       {/* Order Summary Pill */}
-      <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+      <div className="flex-shrink-0 bg-white rounded-xl p-3 border border-slate-200 shadow-2xs flex items-center justify-between">
         <div>
-          <span className="text-xs text-slate-400 font-semibold uppercase">Job Reference</span>
-          <div className="text-base font-mono font-bold text-slate-800">
+          <span className="text-[10px] text-slate-400 font-bold uppercase">Job Reference</span>
+          <div className="text-sm font-mono font-bold text-slate-800 leading-none mt-0.5">
             {jobRef}
           </div>
-          <div className="text-xs text-slate-500 mt-0.5">
-            {quote?.totalSides || activeJob?.quote?.totalSides || 1} sides ({quote?.totalSheets || activeJob?.quote?.totalSheets || 1} physical sheets)
+          <div className="text-[11px] text-slate-500 mt-0.5">
+            {quote?.totalSides || activeJob?.quote?.totalSides || 1} sides ({quote?.totalSheets || activeJob?.quote?.totalSheets || 1} sheets)
           </div>
         </div>
 
         <div className="text-right">
-          <span className="text-xs text-slate-400 font-semibold uppercase">Amount Due</span>
-          <div className="text-3xl font-black text-brand-600">
+          <span className="text-[10px] text-slate-400 font-bold uppercase">Amount Due</span>
+          <div className="text-2xl font-black text-brand-600 leading-none mt-0.5">
             {currencySymbol}{amount.toFixed(2)}
           </div>
         </div>
       </div>
 
-      {/* Unified Single-View Payment Card: VPA ID + Auto QR Code */}
-      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-lg space-y-5">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-9 h-9 rounded-xl bg-brand-50 text-brand-700 flex items-center justify-center border border-brand-200">
-              <QrCode className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-base font-bold text-slate-900">Instant UPI Payment</h3>
-              <p className="text-xs text-slate-500">Scan code with any UPI app on your smartphone</p>
-            </div>
-          </div>
-          <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-            ● Dynamic QR Ready
-          </span>
-        </div>
-
-        {/* VPA ID mentioned right above the QR code */}
-        <div className="p-3.5 bg-slate-50/90 rounded-2xl border border-slate-200 flex items-center justify-between gap-3">
+      {/* Unified Single-View Payment Card */}
+      <div className="flex-1 min-h-0 bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden">
+        {/* VPA ID Banner */}
+        <div className="flex-shrink-0 p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
           <div className="min-w-0">
             <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">
               Virtual Payment Address (VPA ID)
             </span>
-            <span className="text-sm font-mono font-black text-brand-700 truncate block">
+            <span className="text-xs font-mono font-black text-brand-700 truncate block">
               {KIOSK_VPA_ID}
             </span>
           </div>
@@ -152,94 +153,86 @@ export default function PaymentStep({ onNext, onBack }) {
           <button
             type="button"
             onClick={copyVpa}
-            className="touch-btn px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 flex items-center space-x-1.5 shadow-2xs transition"
+            className="touch-btn px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-200 rounded-lg text-[11px] font-semibold text-slate-700 flex items-center space-x-1 shadow-2xs transition"
           >
-            {copiedVpa ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-slate-500" />}
-            <span>{copiedVpa ? 'Copied' : 'Copy VPA'}</span>
+            {copiedVpa ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3 text-slate-500" />}
+            <span>{copiedVpa ? 'Copied' : 'Copy'}</span>
           </button>
         </div>
 
-        {/* Dynamic UPI QR Code centered automatically */}
-        <div className="p-5 bg-gradient-to-b from-slate-50 to-slate-100/60 rounded-2xl border border-slate-200 text-center space-y-3">
-          <div className="inline-block p-3.5 bg-white rounded-2xl shadow-md border border-slate-200">
+        {/* Dynamic QR Code */}
+        <div className="flex-1 flex flex-col items-center justify-center text-center py-2 min-h-0">
+          <div className="p-2 bg-white rounded-xl shadow-xs border border-slate-200">
             {upiQrDataUrl ? (
               <img
                 src={upiQrDataUrl}
                 alt="UPI Payment QR Code"
-                className="w-48 h-48 mx-auto rounded-lg"
+                className="w-32 h-32 sm:w-36 sm:h-36 mx-auto rounded"
               />
             ) : (
-              <div className="w-48 h-48 flex items-center justify-center text-slate-400 text-xs">
-                <RefreshCw className="w-6 h-6 animate-spin mr-2" />
+              <div className="w-32 h-32 flex items-center justify-center text-slate-400 text-xs">
                 Generating UPI QR...
               </div>
             )}
-            <div className="text-[11px] font-bold text-slate-600 mt-2">
-              Scan & Pay: <strong className="text-brand-700">{currencySymbol}{amount.toFixed(2)}</strong>
+            <div className="text-[10px] font-bold text-slate-600 mt-1">
+              Pay: <strong className="text-brand-700">{currencySymbol}{amount.toFixed(2)}</strong>
             </div>
           </div>
-
-          {/* Supported UPI Apps logos / text */}
-          <div className="text-[11px] text-slate-500 font-medium">
-            Supported Apps: <span className="text-slate-700 font-semibold">Google Pay • PhonePe • Paytm • BHIM • Cred</span>
-          </div>
+          <p className="text-[10px] text-slate-400 font-medium mt-1">
+            GPay • PhonePe • Paytm • BHIM • Cred
+          </p>
         </div>
 
-        {/* Error / Retry Banner */}
         {paymentError && (
-          <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-sm flex items-start space-x-3">
-            <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-            <div className="flex-1 text-xs">
-              <span className="font-bold block">Payment Declined</span>
-              <span>{paymentError}</span>
-            </div>
+          <div className="flex-shrink-0 p-2 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs flex items-center space-x-2">
+            <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+            <span>{paymentError}</span>
           </div>
         )}
 
-        {/* Test simulation failure checkbox */}
-        <div className="pt-1">
-          <label className="flex items-center space-x-2 text-xs text-slate-600 cursor-pointer select-none">
+        <div className="flex-shrink-0 pt-1">
+          <label className="flex items-center space-x-2 text-[11px] text-slate-500 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={forceFailTest}
               onChange={(e) => setForceFailTest(e.target.checked)}
-              className="rounded text-brand-600 focus:ring-brand-500 w-4 h-4"
+              className="rounded text-brand-600 focus:ring-brand-500 w-3.5 h-3.5"
             />
-            <span>Simulate Payment Failure (To demonstrate retry workflow)</span>
+            <span>Simulate Payment Failure (Retry Demo)</span>
           </label>
         </div>
+      </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center space-x-4 pt-3 border-t border-slate-100">
-          <button
-            type="button"
-            onClick={onBack}
-            disabled={isProcessing}
-            className="touch-btn px-5 py-3.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-sm font-semibold flex items-center space-x-2 transition"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back</span>
-          </button>
+      {/* Docked Navigation Footer */}
+      <div className="flex-shrink-0 pt-2 flex items-center space-x-3 border-t border-slate-200">
+        <button
+          type="button"
+          onClick={onBack}
+          disabled={isProcessing}
+          className="touch-btn px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold flex items-center space-x-1.5 transition"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back</span>
+        </button>
 
-          <button
-            type="button"
-            onClick={() => processPaymentSubmission(false)}
-            disabled={isProcessing}
-            className="touch-btn flex-1 py-3.5 px-6 rounded-xl text-base font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/25 flex items-center justify-center space-x-2 active:scale-95 transition disabled:bg-slate-300"
-          >
-            {isProcessing ? (
-              <>
-                <RefreshCw className="w-5 h-5 animate-spin" />
-                <span>Verifying UPI Transaction...</span>
-              </>
-            ) : (
-              <>
-                <CheckCircle2 className="w-5 h-5" />
-                <span>Pay {currencySymbol}{amount.toFixed(2)} (Simulated)</span>
-              </>
-            )}
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => processPaymentSubmission(false)}
+          disabled={isProcessing}
+          className="touch-btn flex-1 py-3 px-6 rounded-xl text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-500/25 flex items-center justify-center space-x-2 active:scale-95 transition disabled:bg-slate-300"
+        >
+          {isProcessing ? (
+            <>
+              <RefreshCw className="w-4 h-4 animate-spin" />
+              <span>Verifying UPI...</span>
+            </>
+          ) : (
+            <>
+              <CheckCircle2 className="w-4 h-4" />
+              <span>Pay {currencySymbol}{amount.toFixed(2)} (Simulated)</span>
+            </>
+          )}
+        </button>
       </div>
     </div>
   );
