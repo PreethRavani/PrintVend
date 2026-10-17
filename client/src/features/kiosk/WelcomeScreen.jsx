@@ -11,6 +11,7 @@ import {
   X
 } from 'lucide-react';
 import { useKiosk } from '../../context/KioskContext';
+import workflowStepsImg from '../../assets/workflow-steps-transparent.png';
 
 export default function WelcomeScreen({ onStartSession }) {
   const { currentKiosk, sessionLoading } = useKiosk();
@@ -92,6 +93,18 @@ export default function WelcomeScreen({ onStartSession }) {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* 4-Step Quick Workflow Guide (User Image with Background Removed) */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#0d131f] via-[#111827] to-[#0d131f] border border-slate-800/90 p-3 sm:p-4 shadow-xl">
+        <div className="absolute -left-12 -top-12 w-48 h-48 bg-[#0071e3]/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+        <img
+          src={workflowStepsImg}
+          alt="Scan. Upload. Pay. Collect. - Quick 4-step self-service kiosk workflow"
+          className="relative z-10 w-full h-auto object-contain select-none pointer-events-none drop-shadow-md"
+          loading="eager"
+        />
       </div>
 
       {/* Terminal Health & Capabilities (2 Spacious, Beautiful Cards - No Redundant Queue Card) */}
