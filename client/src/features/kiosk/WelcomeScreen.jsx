@@ -2,185 +2,191 @@ import React, { useState } from 'react';
 import {
   Printer,
   FileUp,
-  Clock,
   Sparkles,
   Layers,
-  Palette,
   CheckCircle2,
-  AlertCircle,
   HelpCircle,
   ChevronRight,
   ShieldCheck,
-  Zap,
-  Users,
   X
 } from 'lucide-react';
 import { useKiosk } from '../../context/KioskContext';
 
 export default function WelcomeScreen({ onStartSession }) {
-  const { currentKiosk, kiosks, setSelectedKioskId, selectedKioskId, sessionLoading } = useKiosk();
+  const { currentKiosk, sessionLoading } = useKiosk();
   const [showHelpModal, setShowHelpModal] = useState(false);
 
   // Enabled by default unless explicitly in OFFLINE or MAINTENANCE
   const isOnline = currentKiosk ? currentKiosk.status !== 'OFFLINE' && currentKiosk.status !== 'MAINTENANCE' : true;
 
   return (
-    <div className="max-w-5xl mx-auto space-y-3 sm:space-y-4 py-1 sm:py-2 w-full">
-      {/* Hero Touch Banner - Apple Minimalist Aesthetic */}
-      <div className="relative overflow-hidden rounded-3xl bg-[#0f172a] border border-slate-800/80 p-6 sm:p-8 text-white shadow-xl">
-        <div className="absolute -right-12 -bottom-12 w-80 h-80 bg-[#0071e3]/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute right-8 top-6 opacity-10 hidden lg:block">
-          <Printer className="w-48 h-48 text-slate-300" />
-        </div>
+    <div className="max-w-4xl mx-auto space-y-6 py-4 w-full">
+      {/* Hero Touch Banner - Catchy Modern Apple Obsidian Aesthetic with Animated Visual */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#1e293b] border border-slate-800 p-8 sm:p-10 text-white shadow-2xl">
+        {/* Soft Ambient Radial Lights */}
+        <div className="absolute -right-20 -top-20 w-96 h-96 bg-[#0071e3]/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute right-1/3 -bottom-24 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 max-w-xl space-y-3">
-          <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-slate-800/90 text-slate-300 border border-slate-700/80 text-[11px] font-medium tracking-wide">
-            <Sparkles className="w-3 h-3 text-[#0071e3]" />
-            <span>Fast, Privacy-First Self-Service Printing</span>
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          {/* Left Text & CTA */}
+          <div className="md:col-span-7 space-y-4">
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-slate-800/90 text-slate-200 border border-slate-700/80 text-xs font-semibold tracking-wide shadow-xs animate-pulse-subtle">
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <Sparkles className="w-3.5 h-3.5 text-[#0071e3]" />
+              <span>Smart Self-Service Printing Kiosk</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
+              Print Your Documents in Seconds.
+            </h1>
+
+            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              No lines, no thumb drives, no hassle. Choose pre-uploaded official college documents or transfer files instantly from your mobile phone.
+            </p>
+
+            {/* Prominent Touch Button with Tactile Hover & Scale */}
+            <div className="pt-3">
+              <button
+                onClick={() => onStartSession()}
+                disabled={!isOnline || sessionLoading}
+                className={`touch-btn px-9 py-4 rounded-2xl text-base sm:text-lg font-semibold shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center space-x-3 ${
+                  isOnline && !sessionLoading
+                    ? 'bg-[#0071e3] hover:bg-[#0077ed] text-white active:scale-[0.98]'
+                    : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/50'
+                }`}
+              >
+                <FileUp className="w-5 h-5 text-white" />
+                <span>{sessionLoading ? 'Starting Session...' : 'Start Printing Now'}</span>
+                <ChevronRight className="w-5 h-5 ml-0.5" />
+              </button>
+            </div>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white leading-tight">
-            Print Your Documents in Seconds.
-          </h1>
+          {/* Right Catchy Animated Graphic */}
+          <div className="md:col-span-5 flex items-center justify-center">
+            <div className="relative animate-float-slow">
+              {/* Graphic container with glow */}
+              <div className="w-56 h-56 rounded-3xl bg-gradient-to-tr from-slate-800 to-slate-900 border border-slate-700/80 p-6 shadow-2xl flex flex-col items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-radial from-[#0071e3]/15 to-transparent pointer-events-none" />
 
-          <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-            No lines, no thumb drives, no hassle. Choose pre-uploaded college documents or transfer assignments directly from your phone.
-          </p>
+                {/* Animated scanline */}
+                <div className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#0071e3] to-transparent animate-scanline" />
 
-          {/* Single Prominent Primary Action Touch Button (Apple System Blue Solid) */}
-          <div className="pt-2">
-            <button
-              onClick={() => onStartSession()}
-              disabled={!isOnline || sessionLoading}
-              className={`touch-btn px-8 py-3.5 rounded-2xl text-base font-semibold shadow-sm transition-all flex items-center justify-center space-x-2.5 ${
-                isOnline && !sessionLoading
-                  ? 'bg-[#0071e3] hover:bg-[#0077ed] text-white active:scale-[0.98]'
-                  : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/50'
-              }`}
-            >
-              <FileUp className="w-5 h-5" />
-              <span>{sessionLoading ? 'Starting Session...' : 'Start Printing'}</span>
-              <ChevronRight className="w-4 h-4 ml-0.5" />
-            </button>
+                {/* Printer & Document Visual */}
+                <div className="relative z-10 flex flex-col items-center space-y-3">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#0071e3] to-blue-700 text-white flex items-center justify-center shadow-lg shadow-blue-500/40">
+                    <Printer className="w-10 h-10" />
+                  </div>
+
+                  {/* Floating Document Badge */}
+                  <div className="px-3.5 py-1.5 rounded-xl bg-slate-800/90 border border-slate-600/80 shadow-md flex items-center space-x-2 text-xs font-semibold text-slate-200">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Instant Cloud Sync</span>
+                  </div>
+
+                  <span className="text-[11px] font-medium text-slate-400">
+                    Touchscreen Ready
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Real-Time Terminal Status Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      {/* Terminal Health & Capabilities (2 Spacious, Beautiful Cards - No Redundant Queue Card) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Card 1: Operational Status */}
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs space-y-2">
+        <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Kiosk Health</span>
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+              <span className="text-sm font-bold text-slate-900">Kiosk Hardware Health</span>
+            </div>
             <span
-              className={`px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 ${
+              className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 ${
                 isOnline
                   ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                   : 'bg-rose-50 text-rose-700 border border-rose-200'
               }`}
             >
-              <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+              <span className={`w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
               {currentKiosk?.status || 'ONLINE'}
             </span>
           </div>
 
-          <div className="space-y-1.5 text-xs">
+          <div className="space-y-2 text-xs sm:text-sm">
             <div className="flex justify-between text-slate-600">
-              <span>Paper Tray (A4/A3):</span>
-              <span className="font-bold text-slate-800">{currentKiosk?.paperLevel || 94}% full</span>
+              <span className="font-medium">Paper Tray (A4/A3):</span>
+              <span className="font-bold text-slate-900">{currentKiosk?.paperLevel || 94}% full</span>
             </div>
-            <div className="w-full bg-slate-100 rounded-full h-1.5">
+            <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
               <div
-                className="bg-brand-500 h-1.5 rounded-full"
+                className="bg-emerald-500 h-2 rounded-full"
                 style={{ width: `${currentKiosk?.paperLevel || 94}%` }}
               />
             </div>
 
-            <div className="flex justify-between text-slate-500 text-[10px] pt-0.5">
-              <span>Black Toner: {currentKiosk?.tonerBlack || 88}%</span>
-              <span>Color Toner: {currentKiosk?.tonerColor || 76}%</span>
+            <div className="flex justify-between text-slate-500 text-xs pt-1">
+              <span>Black Toner: <strong className="text-slate-800">{currentKiosk?.tonerBlack || 88}%</strong></span>
+              <span>Color Toner: <strong className="text-slate-800">{currentKiosk?.tonerColor || 76}%</strong></span>
             </div>
           </div>
         </div>
 
-        {/* Card 2: Queue & Wait Estimate */}
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs space-y-2">
+        {/* Card 2: Capabilities & Modes */}
+        <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Queue Status</span>
-            <Clock className="w-3.5 h-3.5 text-brand-600" />
-          </div>
-
-          <div className="flex items-baseline space-x-1.5">
-            <span className="text-2xl font-black text-slate-900">
-              {currentKiosk?.queueLength || 0}
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#0071e3] flex items-center justify-center font-bold">
+                <Layers className="w-4 h-4" />
+              </div>
+              <span className="text-sm font-bold text-slate-900">Supported Formats & Specs</span>
+            </div>
+            <span className="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+              High Speed
             </span>
-            <span className="text-xs text-slate-500">jobs in queue</span>
           </div>
 
-          <p className="text-[11px] text-slate-500">
-            Estimated wait time:{' '}
-            <strong className="text-slate-700">
-              {currentKiosk?.queueLength === 0 ? 'Instant / Zero Wait' : `~${(currentKiosk?.queueLength || 1) * 2} mins`}
-            </strong>
-          </p>
-        </div>
-
-        {/* Card 3: Capabilities & Modes */}
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Features</span>
-            <Layers className="w-3.5 h-3.5 text-brand-600" />
-          </div>
-
-          <div className="space-y-1 text-xs">
+          <div className="space-y-2 text-xs sm:text-sm">
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Paper Sizes:</span>
-              <span className="font-bold text-slate-800">
+              <span className="text-slate-600 font-medium">Paper Sizes:</span>
+              <span className="font-bold text-slate-900">
                 {currentKiosk?.supportedPaperSizes?.join(', ') || 'A4, A3'}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Print Modes:</span>
-              <span className="font-bold text-slate-800">
-                {currentKiosk?.supportedPrintModes?.includes('COLOR') ? 'B&W + Color' : 'B&W only'}
+              <span className="text-slate-600 font-medium">Print Modes:</span>
+              <span className="font-bold text-slate-900">
+                {currentKiosk?.supportedPrintModes?.includes('COLOR') ? 'Black & White + Full Color' : 'B&W only'}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-600">Duplex (2-sided):</span>
-              <span className="font-semibold text-emerald-600">
-                {currentKiosk?.supportedDuplex ? 'Supported' : 'Single only'}
+              <span className="text-slate-600 font-medium">Duplex (Double-Sided):</span>
+              <span className="font-bold text-emerald-600">
+                {currentKiosk?.supportedDuplex ? 'Supported (Eco Saver)' : 'Single only'}
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Terminal Switcher & Help Footer */}
-      <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-200/70 text-xs">
-        <div className="flex items-center space-x-2 text-slate-600 text-[11px]">
-          <span className="font-bold uppercase tracking-wider text-slate-400">Kiosk:</span>
-          {kiosks.length > 1 ? (
-            <select
-              value={selectedKioskId}
-              onChange={(e) => setSelectedKioskId(e.target.value)}
-              className="bg-white border border-slate-300 rounded-md px-2 py-1 font-semibold text-slate-800 focus:outline-none"
-            >
-              {kiosks.map((k) => (
-                <option key={k.kioskId} value={k.kioskId}>
-                  {k.name} ({k.kioskId})
-                </option>
-              ))}
-            </select>
-          ) : (
-            <span className="font-semibold text-slate-800">{currentKiosk?.name || 'Central Library Kiosk'}</span>
-          )}
+      {/* Terminal Info & How It Works Footer */}
+      <div className="flex items-center justify-between pt-2 border-t border-slate-200 text-xs sm:text-sm">
+        <div className="text-slate-500 font-medium flex items-center space-x-1.5">
+          <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>{currentKiosk?.name || 'Central Library Terminal'}</span>
+          <span>•</span>
+          <span>Self-Service Kiosk #1</span>
         </div>
 
         <button
           onClick={() => setShowHelpModal(true)}
-          className="text-[11px] text-brand-600 hover:text-brand-800 font-bold flex items-center space-x-1 touch-btn"
+          className="text-xs font-semibold text-[#0071e3] hover:text-[#0077ed] flex items-center space-x-1 touch-btn"
         >
-          <HelpCircle className="w-3.5 h-3.5" />
+          <HelpCircle className="w-4 h-4" />
           <span>How It Works</span>
         </button>
       </div>

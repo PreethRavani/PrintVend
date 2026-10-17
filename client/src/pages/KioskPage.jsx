@@ -28,8 +28,8 @@ export default function KioskPage() {
       {/* Navigation bar ONLY shown on Home / Welcome Screen as requested */}
       {currentStep === 1 && <Header />}
 
-      {/* Main Kiosk Viewport: occupies remaining height with zero page scroll */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-3 flex flex-col min-h-0 overflow-hidden">
+      {/* Main Kiosk Viewport: occupies remaining height with natural comfortable scroll when needed */}
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col min-h-0 overflow-y-auto">
         {currentStep === 1 && (
           <div className="h-full flex flex-col justify-center overflow-y-auto no-scrollbar">
             <WelcomeScreen onStartSession={handleStartSession} />

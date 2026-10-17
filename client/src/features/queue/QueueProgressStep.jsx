@@ -36,7 +36,7 @@ export default function QueueProgressStep({ onReadyForCollection }) {
   };
 
   return (
-    <div className="h-full flex flex-col justify-center overflow-hidden gap-3 max-w-xl mx-auto w-full py-1">
+    <div className="max-w-xl mx-auto w-full space-y-4 py-2">
       {/* Top Header */}
       <div className="flex-shrink-0 text-center space-y-1">
         <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold uppercase tracking-wider">

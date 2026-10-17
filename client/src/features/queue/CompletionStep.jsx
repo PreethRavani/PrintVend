@@ -44,7 +44,7 @@ export default function CompletionStep({ onFinish }) {
   }, [resetSession]);
 
   return (
-    <div className="h-full flex flex-col justify-center overflow-hidden gap-3 max-w-md mx-auto w-full text-center py-1">
+    <div className="max-w-md mx-auto w-full text-center space-y-4 py-2">
       {/* Celebration Header */}
       <div className="flex-shrink-0 space-y-1">
         <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl mx-auto flex items-center justify-center border border-emerald-200 shadow-xs">

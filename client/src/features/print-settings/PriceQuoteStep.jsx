@@ -40,19 +40,19 @@ export default function PriceQuoteStep({ onNext, onBack }) {
   }
 
   return (
-    <div className="h-full flex flex-col justify-center overflow-hidden gap-3 max-w-2xl mx-auto w-full py-1">
+    <div className="max-w-2xl mx-auto w-full space-y-4 py-2">
       {/* Top Header */}
-      <div className="flex-shrink-0 flex items-center justify-between pb-2 border-b border-slate-200">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-[#0071e3] text-white flex items-center justify-center font-bold text-xs">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm flex items-center justify-between">
+        <div className="flex items-center space-x-3.5">
+          <div className="w-10 h-10 rounded-xl bg-[#0071e3] text-white flex items-center justify-center font-bold text-sm shadow-sm">
             3/4
           </div>
           <div>
-            <h2 className="text-lg sm:text-xl font-semibold tracking-tight text-slate-900 leading-tight">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 leading-tight">
               Transparent Price Breakdown
             </h2>
-            <p className="text-[11px] text-slate-500 hidden sm:block">
-              Review official campus tariff before checkout
+            <p className="text-xs sm:text-sm text-slate-500">
+              Review official campus tariff before simulated checkout
             </p>
           </div>
         </div>
@@ -60,10 +60,10 @@ export default function PriceQuoteStep({ onNext, onBack }) {
         <button
           type="button"
           onClick={resetSession}
-          className="touch-btn px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-medium flex items-center space-x-1 transition"
+          className="touch-btn px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition"
           title="Cancel session"
         >
-          <XCircle className="w-3.5 h-3.5" />
+          <XCircle className="w-4 h-4" />
           <span>Cancel</span>
         </button>
       </div>
