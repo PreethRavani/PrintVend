@@ -31,7 +31,7 @@ export default function KioskPage() {
       {/* Main Kiosk Viewport: occupies remaining height with natural comfortable scroll when needed */}
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-2 sm:py-3 flex flex-col min-h-0 overflow-y-auto">
         {currentStep === 1 && (
-          <div className="w-full max-w-4xl mx-auto my-auto py-1">
+          <div className="w-full mx-auto my-auto py-1">
             <WelcomeScreen onStartSession={handleStartSession} />
           </div>
         )}
