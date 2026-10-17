@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useKiosk } from '../../context/KioskContext';
 import workflowStepsImg from '../../assets/workflow-steps-transparent.png';
+import heroVideo from '../../assets/hero-video.mp4';
 
 export default function WelcomeScreen({ onStartSession }) {
   const { currentKiosk, sessionLoading } = useKiosk();
@@ -21,23 +22,23 @@ export default function WelcomeScreen({ onStartSession }) {
   const isOnline = currentKiosk ? currentKiosk.status !== 'OFFLINE' && currentKiosk.status !== 'MAINTENANCE' : true;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 py-4 w-full">
-      {/* Hero Touch Banner - Catchy Modern Apple Obsidian Aesthetic with Animated Visual */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#1e293b] border border-slate-800 p-8 sm:p-10 text-white shadow-2xl">
+    <div className="max-w-4xl mx-auto space-y-4 py-1 w-full">
+      {/* Hero Touch Banner - Catchy Modern Apple Obsidian Aesthetic with 1:1 Video Visual */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#1e293b] border border-slate-800 p-6 sm:p-8 text-white shadow-2xl">
         {/* Soft Ambient Radial Lights */}
         <div className="absolute -right-20 -top-20 w-96 h-96 bg-[#0071e3]/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute right-1/3 -bottom-24 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center">
           {/* Left Text & CTA */}
-          <div className="md:col-span-7 space-y-4">
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-slate-800/90 text-slate-200 border border-slate-700/80 text-xs font-semibold tracking-wide shadow-xs animate-pulse-subtle">
+          <div className="md:col-span-7 space-y-3.5">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-800/90 text-slate-200 border border-slate-700/80 text-xs font-semibold tracking-wide shadow-xs animate-pulse-subtle">
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
               <Sparkles className="w-3.5 h-3.5 text-[#0071e3]" />
               <span>Smart Self-Service Printing Kiosk</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-bold tracking-tight text-white leading-tight">
               Print Your Documents in Seconds.
             </h1>
 
@@ -46,11 +47,11 @@ export default function WelcomeScreen({ onStartSession }) {
             </p>
 
             {/* Prominent Touch Button with Tactile Hover & Scale */}
-            <div className="pt-3">
+            <div className="pt-2">
               <button
                 onClick={() => onStartSession()}
                 disabled={!isOnline || sessionLoading}
-                className={`touch-btn px-9 py-4 rounded-2xl text-base sm:text-lg font-semibold shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center space-x-3 ${
+                className={`touch-btn px-8 py-3.5 rounded-2xl text-base sm:text-lg font-semibold shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center space-x-3 ${
                   isOnline && !sessionLoading
                     ? 'bg-[#0071e3] hover:bg-[#0077ed] text-white active:scale-[0.98]'
                     : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/50'
@@ -63,33 +64,20 @@ export default function WelcomeScreen({ onStartSession }) {
             </div>
           </div>
 
-          {/* Right Catchy Animated Graphic */}
+          {/* Right Video Visual (1:1 Ratio as requested) */}
           <div className="md:col-span-5 flex items-center justify-center">
-            <div className="relative animate-float-slow">
-              {/* Graphic container with glow */}
-              <div className="w-56 h-56 rounded-3xl bg-gradient-to-tr from-slate-800 to-slate-900 border border-slate-700/80 p-6 shadow-2xl flex flex-col items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-radial from-[#0071e3]/15 to-transparent pointer-events-none" />
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-3xl overflow-hidden border border-slate-700/80 shadow-2xl bg-black aspect-square flex items-center justify-center group">
+              {/* Subtle ambient lighting */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#0071e3]/15 via-transparent to-emerald-500/10 pointer-events-none z-10" />
 
-                {/* Animated scanline */}
-                <div className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#0071e3] to-transparent animate-scanline" />
-
-                {/* Printer & Document Visual */}
-                <div className="relative z-10 flex flex-col items-center space-y-3">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#0071e3] to-blue-700 text-white flex items-center justify-center shadow-lg shadow-blue-500/40">
-                    <Printer className="w-10 h-10" />
-                  </div>
-
-                  {/* Floating Document Badge */}
-                  <div className="px-3.5 py-1.5 rounded-xl bg-slate-800/90 border border-slate-600/80 shadow-md flex items-center space-x-2 text-xs font-semibold text-slate-200">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Instant Cloud Sync</span>
-                  </div>
-
-                  <span className="text-[11px] font-medium text-slate-400">
-                    Touchscreen Ready
-                  </span>
-                </div>
-              </div>
+              <video
+                src={heroVideo}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover rounded-3xl"
+              />
             </div>
           </div>
         </div>
