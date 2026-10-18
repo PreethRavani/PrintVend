@@ -177,6 +177,13 @@ exports.getJobStatus = async (req, res, next) => {
       });
     }
 
+    // In serverless environments where background intervals freeze, advance simulation on poll
+    if (process.env.VERCEL && (job.status === 'QUEUED' || job.status === 'PRINTING')) {
+      const printerSimulator = require('../jobs/printerSimulator');
+      await printerSimulator.tick();
+      job = await PrintJob.findById(job._id);
+    }
+
     res.json({
       success: true,
       data: {

@@ -59,4 +59,10 @@ async function gracefulShutdown(signal) {
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
-startServer();
+// Export app instance for Vercel Serverless / Services deployment
+module.exports = app;
+
+// Start listener for standalone/local Node execution
+if (require.main === module || (!process.env.VERCEL && process.env.NODE_ENV !== 'test')) {
+  startServer();
+}

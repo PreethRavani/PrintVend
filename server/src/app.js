@@ -68,6 +68,39 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Database connection assurance for serverless / on-demand environments
+const mongoose = require('mongoose');
+const { connectDB } = require('./config/db');
+
+let dbInitPromise = null;
+const ensureDatabase = async () => {
+  if (mongoose.connection.readyState === 1) return;
+  if (!dbInitPromise) {
+    dbInitPromise = (async () => {
+      await connectDB();
+      const Kiosk = require('./models/Kiosk');
+      const kioskCount = await Kiosk.countDocuments();
+      if (kioskCount === 0) {
+        const seed = require('./scripts/seed');
+        await seed(false);
+      }
+    })().catch((err) => {
+      dbInitPromise = null;
+      throw err;
+    });
+  }
+  return dbInitPromise;
+};
+
+app.use(async (req, res, next) => {
+  try {
+    await ensureDatabase();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Mount API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/kiosks', kioskRoutes);

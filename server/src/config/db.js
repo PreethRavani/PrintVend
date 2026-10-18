@@ -5,6 +5,9 @@ const logger = require('../utils/logger');
 let memoryServer = null;
 
 const connectDB = async () => {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
   try {
     // Attempt connection to configured URI first
     await mongoose.connect(config.mongodbUri, {

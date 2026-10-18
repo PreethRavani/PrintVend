@@ -52,8 +52,11 @@ exports.createSession = async (req, res, next) => {
       status: 'ACTIVE'
     });
 
-    // Mobile upload URL (points to client frontend route)
-    const clientBase = config.clientUrl.replace(/\/$/, '');
+    // Mobile upload URL (prefers bound CLIENT_URL, then request origin, then config fallback)
+    const forwardedHost = req.get('x-forwarded-host') || req.get('host');
+    const forwardedProto = req.get('x-forwarded-proto') || (req.secure ? 'https' : 'http');
+    const requestOrigin = forwardedHost ? `${forwardedProto}://${forwardedHost}` : null;
+    const clientBase = (process.env.CLIENT_URL || requestOrigin || config.clientUrl).replace(/\/$/, '');
     const mobileUploadUrl = `${clientBase}/mobile-upload?session=${sessionId}&token=${token}&kiosk=${kiosk.kioskId}`;
 
     // Generate QR code data URL
