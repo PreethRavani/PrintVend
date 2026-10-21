@@ -3,6 +3,7 @@ const PrintSession = require('../models/PrintSession');
 const Kiosk = require('../models/Kiosk');
 const Document = require('../models/Document');
 const { generateSecureToken, hashToken, generateSessionId } = require('../utils/tokenGenerator');
+const { getLocalLanIp } = require('../utils/networkUtils');
 const cleanupService = require('../services/cleanupService');
 const config = require('../config/config');
 const logger = require('../utils/logger');
@@ -56,7 +57,16 @@ exports.createSession = async (req, res, next) => {
     const forwardedHost = req.get('x-forwarded-host') || req.get('host');
     const forwardedProto = req.get('x-forwarded-proto') || (req.secure ? 'https' : 'http');
     const requestOrigin = forwardedHost ? `${forwardedProto}://${forwardedHost}` : null;
-    const clientBase = (process.env.CLIENT_URL || requestOrigin || config.clientUrl).replace(/\/$/, '');
+    let clientBase = (process.env.CLIENT_URL || requestOrigin || config.clientUrl).replace(/\/$/, '');
+
+    // For local testing on Wi-Fi/LAN, if URL points to localhost, replace with host machine's LAN IP
+    // so mobile devices scanning the QR code can open the client over the local network.
+    if (!process.env.VERCEL && (clientBase.includes('localhost') || clientBase.includes('127.0.0.1'))) {
+      const lanIp = getLocalLanIp();
+      if (lanIp && lanIp !== 'localhost') {
+        clientBase = clientBase.replace('localhost', lanIp).replace('127.0.0.1', lanIp);
+      }
+    }
     const mobileUploadUrl = `${clientBase}/mobile-upload?session=${sessionId}&token=${token}&kiosk=${kiosk.kioskId}`;
 
     // Generate QR code data URL

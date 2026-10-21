@@ -1,6 +1,33 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+// Dynamically determine the API base URL
+const getApiBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+
+  // In the browser, detect if accessed from a non-localhost device (e.g. mobile phone on LAN)
+  if (typeof window !== 'undefined' && window.location) {
+    const { hostname } = window.location;
+    const isLoopback = hostname === 'localhost' || hostname === '127.0.0.1';
+
+    // If client is accessed via a real IP / LAN address (like phone scanning QR code),
+    // NEVER point to localhost because localhost would target the phone itself!
+    if (!isLoopback) {
+      if (envUrl && (envUrl.includes('localhost') || envUrl.includes('127.0.0.1'))) {
+        return '/api';
+      }
+    }
+  }
+
+  // If explicit relative or valid external URL is provided, use it
+  if (envUrl && envUrl.trim() !== '' && !envUrl.includes('localhost:5000')) {
+    return envUrl;
+  }
+
+  // Default to relative '/api', proxied by Vite dev/preview server and Vercel routing
+  return '/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 const api = axios.create({
   baseURL: API_BASE_URL,

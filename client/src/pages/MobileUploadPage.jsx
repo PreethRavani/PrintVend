@@ -180,8 +180,25 @@ export default function MobileUploadPage() {
             </button>
 
             {errorMessage && (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs">
-                {errorMessage}
+              <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-rose-800 text-xs space-y-2">
+                <div className="flex items-start space-x-2">
+                  <AlertTriangle className="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <p className="font-semibold text-rose-900">{errorMessage}</p>
+                    {errorMessage.toLowerCase().includes('network') && (
+                      <p className="text-[11px] text-rose-700 leading-relaxed">
+                        Make sure your mobile phone is connected to the same Wi-Fi network as the kiosk computer.
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => loadSession(sessionIdInput || sessionFromQuery)}
+                  className="w-full mt-1 bg-rose-100 hover:bg-rose-200 text-rose-900 font-semibold py-2 rounded-xl text-[11px] transition active:scale-[0.98]"
+                >
+                  Retry Connection
+                </button>
               </div>
             )}
           </div>

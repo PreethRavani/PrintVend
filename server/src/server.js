@@ -25,7 +25,7 @@ async function startServer() {
     printerSimulator.start(2500); // Progress tick every 2.5s for snappy demonstration
     cleanupCron.start();
 
-    server = app.listen(config.port, () => {
+    server = app.listen(config.port, '0.0.0.0', () => {
       logger.info(`=======================================================`);
       logger.info(`🚀 Smart Campus Print Server running on port ${config.port}`);
       logger.info(`📍 API Health: http://localhost:${config.port}/api/health`);
