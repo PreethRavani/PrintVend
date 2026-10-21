@@ -8,9 +8,9 @@ module.exports = {
   mongodbUri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/smart-campus-print',
   jwtSecret: process.env.JWT_SECRET || 'dev_jwt_secret_change_in_production_key_2026',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '24h',
-  uploadDir: process.env.UPLOAD_DIR
-    ? path.resolve(process.env.UPLOAD_DIR)
-    : (process.env.VERCEL ? '/tmp/uploads' : path.resolve(__dirname, '../../', 'uploads')),
+  uploadDir: process.env.VERCEL
+    ? '/tmp/uploads'
+    : (process.env.UPLOAD_DIR ? path.resolve(process.env.UPLOAD_DIR) : path.resolve(__dirname, '../../', 'uploads')),
   maxFileSizeMB: parseInt(process.env.MAX_FILE_SIZE_MB, 10) || 25,
   maxFilesPerSession: parseInt(process.env.MAX_FILES_PER_SESSION, 10) || 10,
   sessionExpiryMinutes: parseInt(process.env.SESSION_EXPIRY_MINUTES, 10) || 30,
