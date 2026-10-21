@@ -143,7 +143,7 @@ exports.createJob = async (req, res, next) => {
 exports.getJob = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const job = await PrintJob.findOne({
+    let job = await PrintJob.findOne({
       $or: [{ jobNumber: id.toUpperCase() }, { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }]
     });
 
@@ -166,7 +166,7 @@ exports.getJob = async (req, res, next) => {
 exports.getJobStatus = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const job = await PrintJob.findOne({
+    let job = await PrintJob.findOne({
       $or: [{ jobNumber: id.toUpperCase() }, { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }]
     });
 
