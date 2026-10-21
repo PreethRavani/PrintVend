@@ -53,11 +53,21 @@ exports.createSession = async (req, res, next) => {
       status: 'ACTIVE'
     });
 
-    // Mobile upload URL (prefers bound CLIENT_URL, then request origin, then config fallback)
+    // Mobile upload URL resolution:
+    // Automatically detect the public URL where the kiosk is currently accessed from (e.g. https://printvend.vercel.app)
     const forwardedHost = req.get('x-forwarded-host') || req.get('host');
     const forwardedProto = req.get('x-forwarded-proto') || (req.secure ? 'https' : 'http');
     const requestOrigin = forwardedHost ? `${forwardedProto}://${forwardedHost}` : null;
-    let clientBase = (process.env.CLIENT_URL || requestOrigin || config.clientUrl).replace(/\/$/, '');
+
+    // Use requestOrigin if available and not an internal vercel-infra domain
+    let clientBase = requestOrigin;
+    if (!clientBase || clientBase.includes('vercel-infra.com')) {
+      clientBase = process.env.CLIENT_URL || config.clientUrl;
+    }
+    if (clientBase && clientBase.includes('vercel-infra.com')) {
+      clientBase = requestOrigin || config.clientUrl;
+    }
+    clientBase = (clientBase || '').replace(/\/$/, '');
 
     // For local testing on Wi-Fi/LAN, if URL points to localhost, replace with host machine's LAN IP
     // so mobile devices scanning the QR code can open the client over the local network.
