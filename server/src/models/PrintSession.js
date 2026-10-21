@@ -42,7 +42,7 @@ const printSessionSchema = new mongoose.Schema(
 );
 
 printSessionSchema.methods.isExpired = function () {
-  return new Date() > this.expiresAt || this.status === 'EXPIRED';
+  return new Date() > this.expiresAt || this.status !== 'ACTIVE';
 };
 
 module.exports = mongoose.model('PrintSession', printSessionSchema);

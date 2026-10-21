@@ -11,7 +11,8 @@ import {
   ArrowRight,
   ShieldCheck,
   Sparkles,
-  Layers
+  Layers,
+  RotateCcw
 } from 'lucide-react';
 import { getSession, createSession } from '../services/sessionService';
 import { uploadFiles } from '../services/uploadService';
@@ -24,6 +25,7 @@ export default function MobileUploadPage() {
 
   const [sessionIdInput, setSessionIdInput] = useState(sessionFromQuery || '');
   const [activeSession, setActiveSession] = useState(null);
+  const [sessionClosedInfo, setSessionClosedInfo] = useState(null);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [loadingSession, setLoadingSession] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -43,21 +45,74 @@ export default function MobileUploadPage() {
     try {
       setLoadingSession(true);
       setErrorMessage(null);
+      setSessionClosedInfo(null);
       const res = await getSession(sId);
-      if (res.isExpired) {
-        setErrorMessage('This printing session has expired. Please scan a fresh QR code at the kiosk.');
+      
+      // If session is not active or expired, terminate immediately
+      if (res.isExpired || res.session?.status !== 'ACTIVE') {
+        const status = res.session?.status || 'COMPLETED';
+        setSessionClosedInfo({ sessionId: sId, status });
         setActiveSession(null);
-      } else {
-        setActiveSession(res.session);
-        setUploadedFiles(res.documents || []);
+        sessionStorage.removeItem('scp_session_id');
+        sessionStorage.removeItem('scp_session_token');
+        return;
+      }
+
+      setActiveSession(res.session);
+      setUploadedFiles(res.documents || []);
+      if (tokenFromQuery) {
+        sessionStorage.setItem('scp_session_id', sId);
+        sessionStorage.setItem('scp_session_token', tokenFromQuery);
       }
     } catch (err) {
-      setErrorMessage(err.message || 'Could not connect to kiosk session.');
-      setActiveSession(null);
+      if (err.message && (err.message.includes('not found') || err.message.includes('expired') || err.message.includes('invalid'))) {
+        setSessionClosedInfo({ sessionId: sId, status: 'EXPIRED' });
+        setActiveSession(null);
+      } else {
+        setErrorMessage(err.message || 'Could not connect to kiosk session.');
+        setActiveSession(null);
+      }
     } finally {
       setLoadingSession(false);
     }
   };
+
+  // Live session status heartbeat / polling:
+  // Detects when the kiosk prints, confirms collection, or resets session
+  useEffect(() => {
+    if (!activeSession?.sessionId) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await getSession(activeSession.sessionId);
+        if (res.isExpired || res.session?.status !== 'ACTIVE') {
+          clearInterval(interval);
+          setSessionClosedInfo({
+            sessionId: activeSession.sessionId,
+            status: res.session?.status || 'COMPLETED'
+          });
+          setActiveSession(null);
+          sessionStorage.removeItem('scp_session_id');
+          sessionStorage.removeItem('scp_session_token');
+        } else if (Array.isArray(res.documents)) {
+          setUploadedFiles(res.documents);
+        }
+      } catch (err) {
+        if (err.message && (err.message.includes('not found') || err.message.includes('invalid') || err.message.includes('expired'))) {
+          clearInterval(interval);
+          setSessionClosedInfo({
+            sessionId: activeSession.sessionId,
+            status: 'COMPLETED'
+          });
+          setActiveSession(null);
+          sessionStorage.removeItem('scp_session_id');
+          sessionStorage.removeItem('scp_session_token');
+        }
+      }
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [activeSession?.sessionId]);
 
   const handleFileSelect = async (e) => {
     const files = e.target.files;
@@ -98,7 +153,18 @@ export default function MobileUploadPage() {
       setUploadProgress(100);
       setTimeout(() => setUploading(false), 500);
     } catch (err) {
-      setErrorMessage(err.message || 'File upload failed');
+      // If backend rejected because session closed on kiosk
+      if (err.message && (err.message.includes('no longer active') || err.message.includes('ended') || err.message.includes('expired'))) {
+        setSessionClosedInfo({
+          sessionId: activeSession.sessionId,
+          status: 'COMPLETED'
+        });
+        setActiveSession(null);
+        sessionStorage.removeItem('scp_session_id');
+        sessionStorage.removeItem('scp_session_token');
+      } else {
+        setErrorMessage(err.message || 'File upload failed');
+      }
       setUploading(false);
     }
   };
@@ -117,8 +183,58 @@ export default function MobileUploadPage() {
           </p>
         </div>
 
-        {/* Session Card */}
-        {!activeSession ? (
+        {/* 1. Session Closed / Completed Screen */}
+        {sessionClosedInfo ? (
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 text-center space-y-4">
+            <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto border border-emerald-200 shadow-xs">
+              <ShieldCheck className="w-7 h-7" />
+            </div>
+
+            <div className="space-y-1">
+              <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-semibold uppercase">
+                <Sparkles className="w-3 h-3 text-[#0071e3]" />
+                <span>Session Ended</span>
+              </div>
+              <h2 className="text-xl font-semibold text-slate-900">
+                Session Finished at Kiosk
+              </h2>
+              <p className="text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">
+                Your printing session has ended. Files from this session have been printed and safely erased from the kiosk server.
+              </p>
+            </div>
+
+            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 text-xs text-slate-600 text-left space-y-1.5">
+              <div className="flex justify-between">
+                <span className="text-slate-400">Previous Session:</span>
+                <span className="font-mono font-semibold text-slate-800">{sessionClosedInfo.sessionId}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-400">Status:</span>
+                <span className="font-semibold text-emerald-700">● {sessionClosedInfo.status}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-400">Privacy Status:</span>
+                <span className="font-semibold text-slate-700">Storage Purged</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSessionClosedInfo(null);
+                setActiveSession(null);
+                setSessionIdInput('');
+                setErrorMessage(null);
+                setSuccessMessage(null);
+                window.history.replaceState({}, document.title, window.location.pathname);
+              }}
+              className="touch-btn w-full bg-[#0071e3] hover:bg-[#0077ed] text-white font-semibold py-3.5 rounded-xl text-xs transition active:scale-[0.98]"
+            >
+              Connect to a New Session
+            </button>
+          </div>
+        ) : !activeSession ? (
+          /* 2. Connect Screen */
           <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-4">
             <h2 className="text-sm font-semibold text-slate-800">Connect to Kiosk Terminal</h2>
             
@@ -203,6 +319,7 @@ export default function MobileUploadPage() {
             )}
           </div>
         ) : (
+          /* 3. Active Upload Screen */
           <div className="space-y-4">
             {/* Active Connected Banner */}
             <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between text-xs text-emerald-800">
@@ -232,7 +349,7 @@ export default function MobileUploadPage() {
             {/* Upload Action Card */}
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="bg-white rounded-3xl p-8 border-2 border-dashed border-brand-300 hover:border-brand-500 shadow-md text-center cursor-pointer transition space-y-3"
+              className="bg-white rounded-3xl p-8 border-2 border-dashed border-[#0071e3]/40 hover:border-[#0071e3] shadow-xs text-center cursor-pointer transition space-y-3"
             >
               <input
                 ref={fileInputRef}
@@ -243,7 +360,7 @@ export default function MobileUploadPage() {
                 className="hidden"
               />
 
-              <div className="w-16 h-16 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+              <div className="w-16 h-16 bg-blue-50 text-[#0071e3] rounded-2xl flex items-center justify-center mx-auto shadow-inner">
                 <UploadCloud className="w-8 h-8" />
               </div>
 
@@ -265,7 +382,7 @@ export default function MobileUploadPage() {
                   <span>{uploadProgress}%</span>
                 </div>
                 <div className="w-full bg-slate-100 rounded-full h-2">
-                  <div className="bg-[#0071e3] h-2 rounded-full" style={{ width: `${uploadProgress}%` }} />
+                  <div className="bg-[#0071e3] h-2 rounded-full transition-all duration-300" style={{ width: `${uploadProgress}%` }} />
                 </div>
               </div>
             )}
@@ -282,7 +399,7 @@ export default function MobileUploadPage() {
                   className="bg-white p-3.5 rounded-xl border border-slate-200 flex items-center justify-between shadow-sm"
                 >
                   <div className="flex items-center space-x-2.5 min-w-0">
-                    <FileText className="w-5 h-5 text-brand-600 flex-shrink-0" />
+                    <FileText className="w-5 h-5 text-[#0071e3] flex-shrink-0" />
                     <span className="text-xs font-medium text-slate-800 truncate">
                       {f.filename || f.originalFilename}
                     </span>
@@ -295,11 +412,14 @@ export default function MobileUploadPage() {
               ))}
             </div>
 
-            {/* Finish Guidance */}
-            <div className="bg-brand-50 border border-brand-200 rounded-2xl p-4 text-xs text-brand-900 space-y-1">
-              <span className="font-bold block">Next Step:</span>
-              <p>
-                Turn back to the physical kiosk touchscreen to configure copies, check the price, and finalize your print!
+            {/* Live Guidance Card */}
+            <div className="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-4 text-xs text-blue-900 space-y-1">
+              <span className="font-bold block flex items-center gap-1.5 text-blue-950">
+                <Sparkles className="w-3.5 h-3.5 text-[#0071e3]" />
+                <span>Next on Kiosk Screen:</span>
+              </span>
+              <p className="text-slate-600 leading-relaxed">
+                When you're done selecting documents, look at the kiosk touch screen to choose paper size, B&W/color mode, and pay. This mobile session will automatically close once printing is complete.
               </p>
             </div>
           </div>
@@ -307,10 +427,8 @@ export default function MobileUploadPage() {
       </div>
 
       {/* Footer */}
-      <footer className="text-center py-4 text-xs text-slate-400">
-        <Link to="/" className="hover:text-brand-600 font-semibold">
-          Return to Kiosk Terminal View
-        </Link>
+      <footer className="text-center text-[11px] text-slate-400 py-4">
+        Smart Campus Print • Kiosk Mobile Upload Link
       </footer>
     </div>
   );

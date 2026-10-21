@@ -12,7 +12,7 @@ import CollectionStep from '../features/queue/CollectionStep';
 import CompletionStep from '../features/queue/CompletionStep';
 
 export default function KioskPage() {
-  const { currentStep, setCurrentStep, startNewSession, session } = useKiosk();
+  const { currentStep, setCurrentStep, startNewSession, session, resetSession } = useKiosk();
   const [showQrModal, setShowQrModal] = useState(false);
 
   const handleStartSession = async (studentId) => {
@@ -78,7 +78,7 @@ export default function KioskPage() {
 
         {currentStep === 9 && (
           <CompletionStep
-            onFinish={() => setCurrentStep(1)}
+            onFinish={resetSession}
           />
         )}
       </main>

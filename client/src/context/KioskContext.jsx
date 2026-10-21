@@ -89,6 +89,14 @@ export function KioskProvider({ children }) {
   const startNewSession = async (studentId = null, autoNavigate = true) => {
     try {
       setSessionLoading(true);
+      // Ensure previous session is terminated in backend so mobile devices close cleanly
+      if (session?.sessionId) {
+        try {
+          await closeSession(session.sessionId);
+        } catch (e) {
+          // Ignore if already closed
+        }
+      }
       const sessionData = await createSession(selectedKioskId, studentId);
       setSession(sessionData);
       sessionStorage.setItem('scp_session_id', sessionData.sessionId);
@@ -240,6 +248,16 @@ export function KioskProvider({ children }) {
       const res = await confirmCollection(activeJob.jobNumber, pinCode || jobStatus?.collectionCode);
       setCleanupReport(res.cleanupReport);
       setJobStatus((prev) => ({ ...prev, status: 'COLLECTED' }));
+
+      // Ensure active session is closed on backend so mobile devices immediately recognize completion
+      if (session?.sessionId) {
+        try {
+          await closeSession(session.sessionId);
+        } catch (e) {
+          // Ignore if already cleaned up
+        }
+      }
+
       setCurrentStep(9); // Success / Completion screen
       return res;
     } catch (err) {

@@ -16,10 +16,18 @@ exports.uploadDocuments = async (req, res, next) => {
     }
 
     const session = await PrintSession.findOne({ sessionId });
-    if (!session || session.isExpired()) {
+    if (!session || session.status !== 'ACTIVE' || session.isExpired()) {
+      if (req.files) {
+        for (const f of req.files) {
+          deleteFile(f.path);
+        }
+      }
       return res.status(400).json({
         success: false,
-        error: { message: 'Session is invalid or expired', code: 'INVALID_SESSION' }
+        error: {
+          message: `This print session has ended and is no longer active (status: ${session ? session.status : 'NOT_FOUND'}). Please scan the new QR code at the kiosk.`,
+          code: 'SESSION_INACTIVE'
+        }
       });
     }
 

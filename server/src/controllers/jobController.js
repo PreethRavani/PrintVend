@@ -280,6 +280,9 @@ exports.confirmCollection = async (req, res, next) => {
     job.collectedAt = new Date();
     await job.save();
 
+    // Mark the associated print session as COMPLETED so mobile devices close the upload session
+    await PrintSession.updateOne({ sessionId: job.sessionId }, { status: 'COMPLETED' });
+
     // Trigger backend file cleanup
     const cleanupReport = await cleanupService.cleanupSessionDocuments(job.sessionId);
 
